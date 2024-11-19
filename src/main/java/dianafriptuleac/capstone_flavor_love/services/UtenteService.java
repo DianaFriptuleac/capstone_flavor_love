@@ -1,5 +1,7 @@
 package dianafriptuleac.capstone_flavor_love.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import dianafriptuleac.capstone_flavor_love.entities.Utente;
 import dianafriptuleac.capstone_flavor_love.exceptions.BadRequestException;
 import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
@@ -12,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -23,6 +27,9 @@ public class UtenteService {
 
     @Autowired
     private PasswordEncoder bcrypt;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     public Utente save(NewUtenteDTO body) {
         this.utenteRepository.findByEmail(body.email()).ifPresent(
@@ -51,6 +58,43 @@ public class UtenteService {
     public Utente findByEmail(String email) {
         return this.utenteRepository.findByEmail(email).orElseThrow(() ->
                 new NotFoundException("L'utente con email " + email + " non è stato trovato"));
+    }
+
+    public Utente findByIdAndUpdate(UUID utenteId, NewUtenteDTO body) {
+        Utente foundUtente = this.findById(utenteId);
+        if (!foundUtente.getEmail().equals(body.email())) {
+            this.utenteRepository.findByEmail(body.email()).ifPresent(
+                    utente -> {
+                        throw new BadRequestException("Email " + body.email() + " è già in uso!");
+                    }
+            );
+        }
+        foundUtente.setNome(body.nome());
+        foundUtente.setCognome(body.cognome());
+        foundUtente.setEmail(body.email());
+        foundUtente.setPassword(bcrypt.encode(body.password()));
+        return this.utenteRepository.save(foundUtente);
+    }
+
+
+    public void findByIdAndDelete(UUID utenteId) {
+        Utente foundUtente = this.findById(utenteId);
+        this.utenteRepository.delete(foundUtente);
+    }
+
+    public String uploadAvatar(UUID utenteId, MultipartFile file) {
+        Utente utente = findById(utenteId);
+        String url;
+
+        try {
+            url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+            utente.setAvatar(url);
+            utenteRepository.save(utente);
+        } catch (IOException e) {
+            throw new BadRequestException("Errore durante l'upload dell'immagine.");
+        }
+
+        return url;
     }
 
 }
