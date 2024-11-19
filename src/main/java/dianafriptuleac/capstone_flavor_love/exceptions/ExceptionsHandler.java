@@ -27,7 +27,7 @@ public class ExceptionsHandler {
     @ExceptionHandler(AuthorizationDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorsResponseDTO handleForbidden(AuthorizationDeniedException ex) {
-        return new ErrorsResponseDTO("Non hai i permessi per accedere! Solo per Organizzatori!", LocalDateTime.now());
+        return new ErrorsResponseDTO("Non hai i permessi per accedere! Solo per Admin!", LocalDateTime.now());
     }
 
     @ExceptionHandler(NotFoundException.class)

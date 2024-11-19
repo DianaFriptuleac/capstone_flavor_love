@@ -15,7 +15,8 @@ public record NewRicettaDTO(
         @Size(max = 8000, message = "Il procedimento della ricetta deve contenere al massimo 8000 caratteri.")
         String procedimento,
 
-        List<UUID> categorie_id
+        @NotEmpty(message = "Specifica almeno una categoria!")
+        List<UUID> categorieId
 
 ) {
 }
