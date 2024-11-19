@@ -35,6 +35,7 @@ public class Utente implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RuoloUtente ruolo;
 
+
     public Utente(String nome, String cognome, String email, String password, String avatar) {
         this.nome = nome;
         this.cognome = cognome;
