@@ -1,5 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class Ricetta {
     @Id
     @GeneratedValue
@@ -30,6 +30,7 @@ public class Ricetta {
             inverseJoinColumns = @JoinColumn(name = "categoria_id")
     )
     @ToString.Exclude
+    @JsonIgnore
     private List<CategoriaRicetta> categorie = new ArrayList<>();
 
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -38,5 +39,14 @@ public class Ricetta {
     public Ricetta(String titolo, String procedimento) {
         this.titolo = titolo;
         this.procedimento = procedimento;
+    }
+
+    @Override
+    public String toString() {
+        return "Ricetta{" +
+                "id=" + id +
+                ", titolo='" + titolo + '\'' +
+                ", procedimento='" + procedimento + '\'' +
+                '}';
     }
 }

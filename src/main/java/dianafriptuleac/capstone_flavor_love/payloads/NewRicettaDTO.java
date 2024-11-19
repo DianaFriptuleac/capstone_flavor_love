@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
-import java.util.UUID;
 
 public record NewRicettaDTO(
         @NotEmpty(message = "Il titolo della ricetta è obbligatorio!")
@@ -16,7 +15,7 @@ public record NewRicettaDTO(
         String procedimento,
 
         @NotEmpty(message = "Specifica almeno una categoria!")
-        List<UUID> categorieId
+        List<String> nomeCategorieRicette
 
 ) {
 }

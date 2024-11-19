@@ -2,6 +2,7 @@ package dianafriptuleac.capstone_flavor_love.services;
 
 import dianafriptuleac.capstone_flavor_love.entities.CategoriaRicetta;
 import dianafriptuleac.capstone_flavor_love.exceptions.BadRequestException;
+import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewCategoriaRicettaDTO;
 import dianafriptuleac.capstone_flavor_love.repositories.CategoriaRicettaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,10 @@ public class CategorieRicettaService {
                 .orElseThrow(() ->
                         new BadRequestException("La categoria con il nome " + nome + " non è stata trovata!"));
         categoriaRicettaRepository.delete(categoriaRicetta);
+    }
+
+    public CategoriaRicetta findByNome(String nome) {
+        return categoriaRicettaRepository.findByNome(nome).orElseThrow(() ->
+                new NotFoundException("Categoria con nome " + nome + " non trovata!"));
     }
 }
