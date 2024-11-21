@@ -56,7 +56,7 @@ public class ImgRicettaService {
         ImgRicetta imgRicetta = imgRicettaRepository.findById(imgId).orElseThrow(() ->
                 new NotFoundException("Immagine con id " + imgId + " non trovata!"));
         Ricetta ricetta = imgRicetta.getRicetta();
-        if (!ricetta.getId().equals(utenteId) && !isAdmin) {
+        if (!ricetta.getUtente().getId().equals(utenteId) && !isAdmin) {
             throw new UnauthorizedException("Non hai i permessi per eliminare  l'immagiine!");
         }
         imgRicettaRepository.delete(imgRicetta);

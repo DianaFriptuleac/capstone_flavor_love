@@ -2,6 +2,7 @@ package dianafriptuleac.capstone_flavor_love.services;
 
 import dianafriptuleac.capstone_flavor_love.entities.CategoriaRicetta;
 import dianafriptuleac.capstone_flavor_love.entities.Ricetta;
+import dianafriptuleac.capstone_flavor_love.entities.Utente;
 import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
 import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewRicettaDTO;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,19 +22,22 @@ import java.util.UUID;
 public class RicettaService {
 
     @Autowired
-    RicettaRepository ricettaRepository;
+    private RicettaRepository ricettaRepository;
 
     @Autowired
-    CategorieRicettaService categorieRicettaService;
+    private CategorieRicettaService categorieRicettaService;
 
-    public Ricetta saveRicetta(NewRicettaDTO newRicettaDTO, UUID utenteId) {
+
+    // -------------------------------- Creo la ricetta ----------------------------
+    public Ricetta saveRicetta(NewRicettaDTO newRicettaDTO, Utente utente) {
         Ricetta ricetta = new Ricetta(
                 newRicettaDTO.titolo(),
                 newRicettaDTO.procedimento(),
                 newRicettaDTO.difficoltaRicetta(),
                 newRicettaDTO.tempoPreparazioneMinuti(),
                 newRicettaDTO.tempoCotturaMinuti(),
-                newRicettaDTO.costoRicetta());
+                newRicettaDTO.costoRicetta(),
+                utente);
         //Recupero le categorie e li associo alla ricetta
         List<CategoriaRicetta> categorie = newRicettaDTO.nomeCategorieRicette().stream()
                 .map(nome -> categorieRicettaService.findByNome(nome))
@@ -42,11 +47,15 @@ public class RicettaService {
     }
 
 
-    public Ricetta updateRicetta(UUID ricettaId, NewRicettaDTO newRicettaDTO, UUID utenteId) {
+    //----------------------------------Update Ricetta --------------------------
+    public Ricetta updateRicetta(UUID ricettaId, NewRicettaDTO newRicettaDTO, Utente utente, String adminRole) {
         Ricetta ricetta = ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new NotFoundException("Ricetta con ID " + ricettaId + " non trovata!"));
 
-        if (!ricetta.getId().equals(utenteId)) {
+        // Controllo se l'utente è il creatore o ADMIN
+        boolean isAdmin = utente.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals(adminRole));
+        if (!ricetta.getUtente().getId().equals(utente.getId()) && !isAdmin) {
             throw new UnauthorizedException("Non hai i permessi per modificare questa ricetta!");
         }
 
@@ -57,23 +66,30 @@ public class RicettaService {
         ricetta.setTempoCotturaMinuti(newRicettaDTO.tempoCotturaMinuti());
         ricetta.setCostoRicetta(newRicettaDTO.costoRicetta());
 
-        List<CategoriaRicetta> categorie = newRicettaDTO.nomeCategorieRicette().stream()
+        List<CategoriaRicetta> categorie = new ArrayList<>(newRicettaDTO.nomeCategorieRicette().stream()
                 .map(nome -> categorieRicettaService.findByNome(nome))
-                .toList();
-
+                .toList());
         ricetta.setCategorie(categorie);
+
         return ricettaRepository.save(ricetta);
     }
 
-
-    public void deleteRicetta(UUID ricettaId, UUID utenteId, boolean isAdmin) {
+    //--------------------------------Cancello Ricetta ------------------------------
+    public void deleteRicetta(UUID ricettaId, Utente currentAuthenticatedUser, String adminRole) {
         Ricetta ricetta = ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new NotFoundException("Ricetta con ID " + ricettaId + " non trovata!"));
-        if (!ricetta.getId().equals(utenteId) && !isAdmin) {
+
+        // Controllo se l'utente è admin o creatore
+        boolean isAdmin = currentAuthenticatedUser.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals(adminRole));
+
+        if (!ricetta.getUtente().getId().equals(currentAuthenticatedUser.getId()) && !isAdmin) {
             throw new UnauthorizedException("Non hai i permessi per eliminare questa ricetta!");
+
         }
         ricettaRepository.delete(ricetta);
     }
+
 
     public Page<Ricetta> findAll(int page, int size, String sortBy) {
         if (size > 100)
@@ -87,7 +103,19 @@ public class RicettaService {
         if (size > 100)
             size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return this.ricettaRepository.findByTitoloContainingIgnoreCase(titolo, pageable);
+        Page<Ricetta> ricettaFound = this.ricettaRepository.findByTitoloContainingIgnoreCase(titolo, pageable);
+        if (ricettaFound.isEmpty()) {
+
+            throw new NotFoundException("Nessun elemento trovato per la tua ricerca: " + titolo);
+        }
+        return ricettaFound;
+    }
+
+    //Controllo se l'utente e il Creatore della ricetta o l'Admin
+    public boolean isCreatorOrAdmin(UUID ricettaId, UUID userId, boolean isAdmin) {
+        Ricetta ricetta = ricettaRepository.findById(ricettaId)
+                .orElseThrow(() -> new NotFoundException("Ricetta con l'ID " + ricettaId + " non è stata trovata!"));
+        return ricetta.getUtente().getId().equals(userId) || isAdmin;
     }
 
 }

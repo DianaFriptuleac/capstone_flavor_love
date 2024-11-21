@@ -1,5 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dianafriptuleac.capstone_flavor_love.enums.RuoloUtente;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -27,14 +29,19 @@ public class Utente implements UserDetails {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID id;
+
     private String nome;
     private String cognome;
     private String email;
     private String password;
     private String avatar;
+
     @Enumerated(EnumType.STRING)
     private RuoloUtente ruolo;
 
+    @OneToMany(mappedBy = "utente", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Ricetta> ricette = new ArrayList<>();
 
     public Utente(String nome, String cognome, String email, String password, String avatar) {
         this.nome = nome;
@@ -43,6 +50,18 @@ public class Utente implements UserDetails {
         this.password = password;
         this.avatar = avatar;
         this.ruolo = RuoloUtente.USER;
+    }
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", ruolo=" + ruolo +
+                '}';
     }
 
     @Override

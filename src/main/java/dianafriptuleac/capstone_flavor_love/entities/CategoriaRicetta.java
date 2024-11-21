@@ -23,7 +23,7 @@ public class CategoriaRicetta {
 
     private String descrizione;
 
-    @ManyToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "categorie")
     @ToString.Exclude
     private List<Ricetta> ricette = new ArrayList<>();
 

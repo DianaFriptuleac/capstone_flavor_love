@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface RicettaRepository extends JpaRepository<Ricetta, UUID> {
     Page<Ricetta> findByTitoloContainingIgnoreCase(String titolo, Pageable pageable);
+
 }

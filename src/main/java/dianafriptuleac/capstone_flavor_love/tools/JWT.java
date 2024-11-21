@@ -19,6 +19,7 @@ public class JWT {
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .subject(String.valueOf(utente.getId()))
+                .claim("ruolo", utente.getRuolo())
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
     }
@@ -34,7 +35,10 @@ public class JWT {
     }
 
     public String getIdFromToken(String accessToken) {
-        return Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parseSignedClaims(accessToken)
+        return Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().
+                parseSignedClaims(accessToken)
                 .getPayload().getSubject();
     }
+
+
 }

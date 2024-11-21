@@ -25,7 +25,6 @@ public class Ricetta {
 
     //Per il procedimento che può essere lungo.
     @Column(length = 8000)
-
     private String procedimento;
 
     @Enumerated(EnumType.STRING)
@@ -38,7 +37,7 @@ public class Ricetta {
     private CostoRicetta costoRicetta;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "ricetta_categorie",
             joinColumns = @JoinColumn(name = "ricetta_id"),
@@ -51,15 +50,20 @@ public class Ricetta {
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImgRicetta> img = new ArrayList<>();
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "utente_id", nullable = false)
+    private Utente utente;
+
     public Ricetta(String titolo, String procedimento, DifficoltaRicetta difficoltaRicetta,
                    int tempoPreparazioneMinuti, int tempoCotturaMinuti,
-                   CostoRicetta costoRicetta) {
+                   CostoRicetta costoRicetta, Utente utente) {
         this.titolo = titolo;
         this.procedimento = procedimento;
         this.difficoltaRicetta = difficoltaRicetta;
         this.tempoPreparazioneMinuti = tempoPreparazioneMinuti;
         this.tempoCotturaMinuti = tempoCotturaMinuti;
         this.costoRicetta = costoRicetta;
+        this.utente = utente;
 
     }
 
