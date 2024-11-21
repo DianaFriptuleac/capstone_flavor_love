@@ -1,7 +1,9 @@
 package dianafriptuleac.capstone_flavor_love.controllers;
 
+import dianafriptuleac.capstone_flavor_love.entities.Ingrediente;
 import dianafriptuleac.capstone_flavor_love.entities.Ricetta;
 import dianafriptuleac.capstone_flavor_love.entities.Utente;
+import dianafriptuleac.capstone_flavor_love.payloads.NewIngredienteDTO;
 import dianafriptuleac.capstone_flavor_love.payloads.NewRicettaDTO;
 import dianafriptuleac.capstone_flavor_love.services.RicettaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -22,6 +26,7 @@ public class RicettaController {
     private RicettaService ricettaService;
 
 
+    //----------------------------- CRUD Ricette ----------------------------------
     // Creo ricetta
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -71,4 +76,46 @@ public class RicettaController {
 
         ricettaService.deleteRicetta(ricettaId, currentAuthenticatedUser, "ADMIN");
     }
+
+    //----------------------------- Gestione Ingredienti----------------------------------
+    // Agg. ingrediente alla ricetta
+    @PostMapping("/{ricettaId}/ingredienti")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Ricetta addIngrediente(
+            @AuthenticationPrincipal Utente currentAuthenticatedUser,
+            @PathVariable UUID ricettaId,
+            @RequestBody @Validated NewIngredienteDTO newIngredienteDTO) {
+        return ricettaService.aggIngredienti(ricettaId, newIngredienteDTO, currentAuthenticatedUser);
+    }
+
+    //Modifico ingrediente
+    @PutMapping("/{ricettaId}/ingredienti/{ingredienteId}")
+    @PreAuthorize("isAuthenticated()")
+    public Ricetta updateIngrediiente(
+            @AuthenticationPrincipal Utente currentAuthenticatedUser,
+            @PathVariable UUID ricettaId,
+            @PathVariable UUID ingredienteId,
+            @RequestBody @Validated NewIngredienteDTO newIngredienteDTO) {
+        return ricettaService.updateRicettaIngr(ricettaId, ingredienteId, newIngredienteDTO, currentAuthenticatedUser);
+    }
+
+    //Cancello Ingrediente
+    @DeleteMapping("/{ricettaId}/ingredienti/{ingredienteId}")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteIngrediente(
+            @AuthenticationPrincipal Utente currentAuthenticatedUser,
+            @PathVariable UUID ricettaId,
+            @PathVariable UUID ingredienteId) {
+        ricettaService.deleteIngrediente(ricettaId, ingredienteId, currentAuthenticatedUser);
+    }
+
+    //Get ingredienti per sezione
+    @GetMapping("/{ricettaId}/ingredienti/sezioni")
+    @PreAuthorize("isAuthenticated()")
+    public Map<String, List<Ingrediente>> getIngredientiBySezione(@PathVariable UUID ricettaId) {
+        return ricettaService.getIngrBySezione(ricettaId);
+    }
+
 }

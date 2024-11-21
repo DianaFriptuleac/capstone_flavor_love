@@ -1,13 +1,16 @@
 package dianafriptuleac.capstone_flavor_love.services;
 
 import dianafriptuleac.capstone_flavor_love.entities.CategoriaRicetta;
+import dianafriptuleac.capstone_flavor_love.entities.Ingrediente;
 import dianafriptuleac.capstone_flavor_love.entities.Ricetta;
 import dianafriptuleac.capstone_flavor_love.entities.Utente;
 import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
 import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
+import dianafriptuleac.capstone_flavor_love.payloads.NewIngredienteDTO;
 import dianafriptuleac.capstone_flavor_love.payloads.NewRicettaDTO;
 import dianafriptuleac.capstone_flavor_love.repositories.RicettaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class RicettaService {
@@ -26,6 +31,10 @@ public class RicettaService {
 
     @Autowired
     private CategorieRicettaService categorieRicettaService;
+
+    @Autowired
+    @Lazy
+    private IngredienteService ingredienteService;
 
 
     // -------------------------------- Creo la ricetta ----------------------------
@@ -90,7 +99,7 @@ public class RicettaService {
         ricettaRepository.delete(ricetta);
     }
 
-
+    //------------------------------------find all ricette -----------------------
     public Page<Ricetta> findAll(int page, int size, String sortBy) {
         if (size > 100)
             size = 100;
@@ -98,7 +107,7 @@ public class RicettaService {
         return this.ricettaRepository.findAll(pageable);
     }
 
-
+    //-------------------------------------find per nome ricetta ---------------------------
     public Page<Ricetta> findByName(String titolo, int page, int size, String sortBy) {
         if (size > 100)
             size = 100;
@@ -111,11 +120,44 @@ public class RicettaService {
         return ricettaFound;
     }
 
-    //Controllo se l'utente e il Creatore della ricetta o l'Admin
+    //-----------------------------Controllo se l'utente e il Creatore della ricetta o l'Admin
     public boolean isCreatorOrAdmin(UUID ricettaId, UUID userId, boolean isAdmin) {
         Ricetta ricetta = ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new NotFoundException("Ricetta con l'ID " + ricettaId + " non è stata trovata!"));
         return ricetta.getUtente().getId().equals(userId) || isAdmin;
+    }
+
+    //-------------------------------find by Id ricetta ------------------------------------
+    public Ricetta findById(UUID ricettaId) {
+        return this.ricettaRepository.findById(ricettaId)
+                .orElseThrow(() -> new NotFoundException(String.valueOf(ricettaId)));
+    }
+
+    //---------------------------Aggiungo ingredienti----------------------
+    public Ricetta aggIngredienti(UUID ricettaId, NewIngredienteDTO newIngredienteDTO, Utente utente) {
+        ingredienteService.aggIngrediente(ricettaId, newIngredienteDTO, utente);
+        return findById(ricettaId);
+    }
+
+    //-------------------------Elimino l'ingrediente dalla ricetta --------------------
+    public void deleteIngrediente(UUID ricettaId, UUID ingredienteId, Utente utente) {
+        ingredienteService.deleteIngrediente(ricettaId, ingredienteId, utente);
+    }
+
+    //--------------------------Modifico Ingrediente ----------------------
+    public Ricetta updateRicettaIngr(UUID ricettaId, UUID ingredienteId,
+                                     NewIngredienteDTO newIngredienteDTO, Utente utente) {
+        ingredienteService.updateIngrediente(ingredienteId, newIngredienteDTO, utente);
+        return findById(ricettaId);
+    }
+
+
+    //----------------------- Raggruppo ingredienti per sezione ----------------
+    public Map<String, List<Ingrediente>> getIngrBySezione(UUID ricettaId) {
+        Ricetta ricetta = findById(ricettaId);
+
+        return ricetta.getIngredienti().stream()
+                .collect(Collectors.groupingBy(Ingrediente::getSezione));
     }
 
 }

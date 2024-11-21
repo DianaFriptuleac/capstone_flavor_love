@@ -47,13 +47,28 @@ public class Ricetta {
     @JsonIgnore
     private List<CategoriaRicetta> categorie = new ArrayList<>();
 
+
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ImgRicetta> img = new ArrayList<>();
 
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
+
+
+    // CascadeType.PERSIST -> quando salvola ricetta, gli ingredienti vengono salvati automaticamente
+    // CascadeType.MERGE -> se aggiorno una ricetta, lo fanno anche gli ingredienti
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "ricetta_ingredienti",
+            joinColumns = @JoinColumn(name = "ricetta_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
+    )
+    @ToString.Exclude
+    private List<Ingrediente> ingredienti = new ArrayList<>();
+
 
     public Ricetta(String titolo, String procedimento, DifficoltaRicetta difficoltaRicetta,
                    int tempoPreparazioneMinuti, int tempoCotturaMinuti,
