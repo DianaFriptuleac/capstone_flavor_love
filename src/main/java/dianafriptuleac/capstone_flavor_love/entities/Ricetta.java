@@ -48,6 +48,7 @@ public class Ricetta {
     private List<CategoriaRicetta> categorie = new ArrayList<>();
 
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ImgRicetta> img = new ArrayList<>();
 
     @ManyToOne(optional = false)

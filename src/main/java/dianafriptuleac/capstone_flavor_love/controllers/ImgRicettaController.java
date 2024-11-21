@@ -1,8 +1,10 @@
 package dianafriptuleac.capstone_flavor_love.controllers;
 
+import dianafriptuleac.capstone_flavor_love.entities.ImgRicetta;
 import dianafriptuleac.capstone_flavor_love.entities.Utente;
 import dianafriptuleac.capstone_flavor_love.services.ImgRicettaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,12 +20,12 @@ public class ImgRicettaController {
     @Autowired
     ImgRicettaService imgRicettaService;
 
-    @PostMapping("/{ricettaId}/upload")
+    @PostMapping("/{ricettaId}")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public String uploadImg(@AuthenticationPrincipal Utente currentAuthenticatedUser,
                             @PathVariable UUID ricettaId,
-                            @RequestParam("immagine") MultipartFile file) {
+                            @RequestParam("file") MultipartFile file) {
         return imgRicettaService.addImg(ricettaId, file, currentAuthenticatedUser);
     }
 
@@ -38,4 +40,12 @@ public class ImgRicettaController {
 
         imgRicettaService.deleteImg(imgId, currentAuthenticatedUser.getId(), isAdmin);
     }
+
+    @GetMapping
+    public Page<ImgRicetta> findAll(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "8") int size,
+                                    @RequestParam(defaultValue = "id") String sortBy) {
+        return this.imgRicettaService.findAll(page, size, sortBy);
+    }
+
 }

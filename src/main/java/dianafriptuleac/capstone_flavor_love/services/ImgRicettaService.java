@@ -11,6 +11,10 @@ import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.repositories.ImgRicettaRepository;
 import dianafriptuleac.capstone_flavor_love.repositories.RicettaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,14 +66,22 @@ public class ImgRicettaService {
         imgRicettaRepository.delete(imgRicetta);
     }
 
-    public boolean ricettaHasImg(UUID id) {
-        Ricetta ricetta = ricettaRepository.findById(id).orElseThrow(() -> new NotFoundException(
-                "Ricetta non trovata con ID: " + id));
-        return !ricetta.getImg().isEmpty();
-    }
-
+    /*  public boolean ricettaHasImg(UUID id) {
+          Ricetta ricetta = ricettaRepository.findById(id).orElseThrow(() -> new NotFoundException(
+                  "Ricetta non trovata con ID: " + id));
+          return !ricetta.getImg().isEmpty();
+      }
+  */
     private boolean isAdmin(Utente utente) {
         return utente.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+    }
+
+
+    public Page<ImgRicetta> findAll(int page, int size, String sortBy) {
+        if (size > 100)
+            size = 100;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.imgRicettaRepository.findAll(pageable);
     }
 }
