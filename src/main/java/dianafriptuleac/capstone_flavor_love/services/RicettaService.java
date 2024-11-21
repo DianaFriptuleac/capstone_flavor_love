@@ -26,7 +26,14 @@ public class RicettaService {
     CategorieRicettaService categorieRicettaService;
 
     public Ricetta saveRicetta(NewRicettaDTO newRicettaDTO, UUID utenteId) {
-        Ricetta ricetta = new Ricetta(newRicettaDTO.titolo(), newRicettaDTO.procedimento());
+        Ricetta ricetta = new Ricetta(
+                newRicettaDTO.titolo(),
+                newRicettaDTO.procedimento(),
+                newRicettaDTO.difficoltaRicetta(),
+                newRicettaDTO.tempoPreparazioneMinuti(),
+                newRicettaDTO.tempoCotturaMinuti(),
+                newRicettaDTO.costoRicetta());
+        //Recupero le categorie e li associo alla ricetta
         List<CategoriaRicetta> categorie = newRicettaDTO.nomeCategorieRicette().stream()
                 .map(nome -> categorieRicettaService.findByNome(nome))
                 .toList();
@@ -45,6 +52,10 @@ public class RicettaService {
 
         ricetta.setTitolo(newRicettaDTO.titolo());
         ricetta.setProcedimento(newRicettaDTO.procedimento());
+        ricetta.setDifficoltaRicetta(newRicettaDTO.difficoltaRicetta());
+        ricetta.setTempoPreparazioneMinuti(newRicettaDTO.tempoPreparazioneMinuti());
+        ricetta.setTempoCotturaMinuti(newRicettaDTO.tempoCotturaMinuti());
+        ricetta.setCostoRicetta(newRicettaDTO.costoRicetta());
 
         List<CategoriaRicetta> categorie = newRicettaDTO.nomeCategorieRicette().stream()
                 .map(nome -> categorieRicettaService.findByNome(nome))

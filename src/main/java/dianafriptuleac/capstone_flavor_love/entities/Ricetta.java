@@ -1,6 +1,8 @@
 package dianafriptuleac.capstone_flavor_love.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dianafriptuleac.capstone_flavor_love.enums.CostoRicetta;
+import dianafriptuleac.capstone_flavor_love.enums.DifficoltaRicetta;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,10 +20,23 @@ public class Ricetta {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID id;
+
     private String titolo;
+
     //Per il procedimento che può essere lungo.
     @Column(length = 8000)
+
     private String procedimento;
+
+    @Enumerated(EnumType.STRING)
+    private DifficoltaRicetta difficoltaRicetta;
+
+    private int tempoPreparazioneMinuti;
+    private int tempoCotturaMinuti;
+
+    @Enumerated(EnumType.STRING)
+    private CostoRicetta costoRicetta;
+
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -36,17 +51,27 @@ public class Ricetta {
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImgRicetta> img = new ArrayList<>();
 
-    public Ricetta(String titolo, String procedimento) {
+    public Ricetta(String titolo, String procedimento, DifficoltaRicetta difficoltaRicetta,
+                   int tempoPreparazioneMinuti, int tempoCotturaMinuti,
+                   CostoRicetta costoRicetta) {
         this.titolo = titolo;
         this.procedimento = procedimento;
+        this.difficoltaRicetta = difficoltaRicetta;
+        this.tempoPreparazioneMinuti = tempoPreparazioneMinuti;
+        this.tempoCotturaMinuti = tempoCotturaMinuti;
+        this.costoRicetta = costoRicetta;
+
     }
 
     @Override
     public String toString() {
         return "Ricetta{" +
-                "id=" + id +
-                ", titolo='" + titolo + '\'' +
+                "titolo='" + titolo + '\'' +
                 ", procedimento='" + procedimento + '\'' +
+                ", difficoltaRicetta=" + difficoltaRicetta +
+                ", tempoPreparazioneMinuti=" + tempoPreparazioneMinuti +
+                ", tempoCotturaMinuti=" + tempoCotturaMinuti +
+                ", costoRicetta=" + costoRicetta +
                 '}';
     }
 }
