@@ -58,14 +58,8 @@ public class Ricetta {
     private Utente utente;
 
 
-    // CascadeType.PERSIST -> quando salvola ricetta, gli ingredienti vengono salvati automaticamente
-    // CascadeType.MERGE -> se aggiorno una ricetta, lo fanno anche gli ingredienti
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "ricetta_ingredienti",
-            joinColumns = @JoinColumn(name = "ricetta_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
-    )
+    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     @ToString.Exclude
     private List<Ingrediente> ingredienti = new ArrayList<>();
 

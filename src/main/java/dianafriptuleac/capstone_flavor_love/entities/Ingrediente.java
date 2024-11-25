@@ -2,10 +2,11 @@ package dianafriptuleac.capstone_flavor_love.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,10 +25,10 @@ public class Ingrediente {
     // "Per la pasta", "Per il sugo"...
     private String sezione;
 
-    @ManyToMany(mappedBy = "ingredienti")
-    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "ricetta_id", nullable = false)
     @JsonIgnore
-    private List<Ricetta> ricetta = new ArrayList<>();
+    private Ricetta ricetta;
 
     public Ingrediente(String nome, String dosaggio, String sezione) {
         this.nome = nome;

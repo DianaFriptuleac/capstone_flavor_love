@@ -43,7 +43,7 @@ public class IngredienteService {
                 newIngredienteDTO.dosaggio(),
                 newIngredienteDTO.sezione()
         );
-        ingrediente.getRicetta().add(ricetta);
+        ingrediente.setRicetta(ricetta);
         ricetta.getIngredienti().add(ingrediente);
 
         return ingredienteRepository.save(ingrediente);
@@ -56,7 +56,7 @@ public class IngredienteService {
         Ingrediente ingrediente = ingredienteRepository.findById(ingredienteId).orElseThrow(() ->
                 new NotFoundException("L'ingrediente con id: " + ingredienteId + " non è stato trovato!"));
         ricetta.getIngredienti().remove(ingrediente);
-        ingrediente.getRicetta().remove(ricetta);
+        ingrediente.setRicetta(null);
         ingredienteRepository.delete(ingrediente);
     }
 
@@ -64,9 +64,8 @@ public class IngredienteService {
     public Ingrediente updateIngrediente(UUID ingredienteId, NewIngredienteDTO newIngredienteDTO, Utente utente) {
         Ingrediente ingrediente = ingredienteRepository.findById(ingredienteId).orElseThrow(() ->
                 new NotFoundException("L'ingrediente con id: " + ingredienteId + " non è stato trovato!"));
-        //findFirst() -> l'ingrediente e assoociato almeno ad una ricetta
-        Ricetta ricetta = ingrediente.getRicetta().stream().findFirst().orElseThrow(() ->
-                new NotFoundException("La ricetta associata non è stata trovata!"));
+        //Prendo la ricetta associata all'ingrediente
+        Ricetta ricetta = ingrediente.getRicetta();
 
         verificaAdminOCreatore(ricetta, utente);
         ingrediente.setNome(newIngredienteDTO.nome());
