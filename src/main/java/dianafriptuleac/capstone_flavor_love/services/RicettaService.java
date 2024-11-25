@@ -36,6 +36,9 @@ public class RicettaService {
     @Lazy
     private IngredienteService ingredienteService;
 
+    @Autowired
+    private ListaSpesaElementService listaSpesaElementService;
+
 
     // -------------------------------- Creo la ricetta ----------------------------
     public Ricetta saveRicetta(NewRicettaDTO newRicettaDTO, Utente utente) {

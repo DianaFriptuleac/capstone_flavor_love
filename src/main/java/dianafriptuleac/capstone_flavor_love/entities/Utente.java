@@ -39,9 +39,13 @@ public class Utente implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RuoloUtente ruolo;
 
-    @OneToMany(mappedBy = "utente", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "utente", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
     private List<Ricetta> ricette = new ArrayList<>();
+
+    @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
+    private List<ListaSpesa> listeSpesa = new ArrayList<>();
 
     public Utente(String nome, String cognome, String email, String password, String avatar) {
         this.nome = nome;

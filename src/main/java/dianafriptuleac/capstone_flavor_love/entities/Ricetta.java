@@ -37,6 +37,7 @@ public class Ricetta {
     private CostoRicetta costoRicetta;
 
 
+    // Categoria della ricetta
     @ManyToMany
     @JoinTable(
             name = "ricetta_categorie",
@@ -47,21 +48,29 @@ public class Ricetta {
     @JsonIgnore
     private List<CategoriaRicetta> categorie = new ArrayList<>();
 
-
+    // Immagini
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ImgRicetta> img = new ArrayList<>();
 
 
+    //Utenti
     @ManyToOne(optional = false)
     @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
 
 
+    //Ingredienti
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
     private List<Ingrediente> ingredienti = new ArrayList<>();
+
+
+    //Lista spesa
+    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JsonIgnore
+    private List<ListaSpesaElement> listaSpesaElements = new ArrayList<>();
 
 
     public Ricetta(String titolo, String procedimento, DifficoltaRicetta difficoltaRicetta,
