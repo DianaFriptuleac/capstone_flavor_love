@@ -66,12 +66,7 @@ public class ImgRicettaService {
         imgRicettaRepository.delete(imgRicetta);
     }
 
-    /*  public boolean ricettaHasImg(UUID id) {
-          Ricetta ricetta = ricettaRepository.findById(id).orElseThrow(() -> new NotFoundException(
-                  "Ricetta non trovata con ID: " + id));
-          return !ricetta.getImg().isEmpty();
-      }
-  */
+
     private boolean isAdmin(Utente utente) {
         return utente.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));

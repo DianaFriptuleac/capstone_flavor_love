@@ -36,6 +36,7 @@ public class ExceptionsHandler {
         return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
     }
 
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorsResponseDTO handleGeneric(Exception ex) {

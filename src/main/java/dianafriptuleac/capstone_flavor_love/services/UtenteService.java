@@ -52,7 +52,7 @@ public class UtenteService {
 
     public Utente findById(UUID utenteId) {
         return this.utenteRepository.findById(utenteId)
-                .orElseThrow(() -> new NotFoundException(String.valueOf(utenteId)));
+                .orElseThrow(() -> new NotFoundException("Utente con ID " + utenteId + " non trovato"));
     }
 
     public Utente findByEmail(String email) {

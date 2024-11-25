@@ -72,6 +72,10 @@ public class Ricetta {
     @JsonIgnore
     private List<ListaSpesaElement> listaSpesaElements = new ArrayList<>();
 
+    //ricettari
+    @ManyToMany(mappedBy = "ricette", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Ricettario> ricettari = new ArrayList<>();
 
     public Ricetta(String titolo, String procedimento, DifficoltaRicetta difficoltaRicetta,
                    int tempoPreparazioneMinuti, int tempoCotturaMinuti,

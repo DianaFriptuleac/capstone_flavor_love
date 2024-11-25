@@ -47,6 +47,10 @@ public class Utente implements UserDetails {
     @JsonIgnore
     private List<ListaSpesa> listeSpesa = new ArrayList<>();
 
+    @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Ricettario> ricettari = new ArrayList<>();
+
     public Utente(String nome, String cognome, String email, String password, String avatar) {
         this.nome = nome;
         this.cognome = cognome;
