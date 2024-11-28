@@ -34,9 +34,10 @@ public class SecurityConfig {
 
         httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
-                        .requestMatchers("/api/ricetteEsterne/allRicette").permitAll() // Rende pubblico l'endpoint
+                        .requestMatchers("/api/ricetteEsterne/allRicette").permitAll() // Rende pubblico l'endpoint allRicette
+                        .requestMatchers("/api/ricetteEsterne/fetchAll").permitAll()
                         .requestMatchers("/api/**").authenticated() // Protegge gli altri endpoint
-                        .anyRequest().permitAll()); // Permette l'accesso a tutto il resto
+                        .anyRequest().permitAll()); // Accesso a tutto il resto
 
         httpSecurity.cors(Customizer.withDefaults());
 

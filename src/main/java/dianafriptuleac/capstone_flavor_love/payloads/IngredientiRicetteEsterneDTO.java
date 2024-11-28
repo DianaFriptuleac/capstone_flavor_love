@@ -1,6 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.payloads;
 
-public record IngredientsRicetteEsterneDTO(
+public record IngredientiRicetteEsterneDTO(
         String name,
         String amount,
         String unit

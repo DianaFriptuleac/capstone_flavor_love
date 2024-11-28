@@ -1,15 +1,14 @@
 package dianafriptuleac.capstone_flavor_love.entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,12 +23,18 @@ public class RicetteEsterne {
     private UUID id;
 
     private String title;
-    private String descrizione;
+
+    @Column(length = 10000)
+    private String instructions;
+
     private String image;
 
-    public RicetteEsterne(String title, String descrizione, String image) {
+    @OneToMany(mappedBy = "ricetteEsterne", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<IngredientiRicettaEsterna> ingredienti = new ArrayList<>();
+
+    public RicetteEsterne(String title, String instructions, String image) {
         this.title = title;
-        this.descrizione = descrizione;
+        this.instructions = instructions;
         this.image = image;
     }
 }

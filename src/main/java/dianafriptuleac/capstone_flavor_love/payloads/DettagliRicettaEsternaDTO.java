@@ -4,7 +4,7 @@ import java.util.List;
 
 public record DettagliRicettaEsternaDTO(
         String summary,
-        List<IngredientsRicetteEsterneDTO> ingredients,
+        List<IngredientiRicetteEsterneDTO> ingredients,
         String instructions
 ) {
 }
