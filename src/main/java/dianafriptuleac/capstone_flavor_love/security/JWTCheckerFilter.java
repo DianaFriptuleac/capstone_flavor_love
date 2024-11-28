@@ -13,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -31,12 +30,18 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
+
+        // Salta il controllo per endpoint pubblici
+        if (shouldNotFilter(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (authHeader == null || !authHeader.startsWith("Bearer "))
             throw new UnauthorizedException("Inserire token nell'Authorization Header nel formato corretto!");
         String accessToken = authHeader.substring(7);
 
         jwt.verifyToken(accessToken);
-
 
         String utenteId = jwt.getIdFromToken(accessToken);
         Utente currentUser = this.utenteService.findById(UUID.fromString(utenteId));
@@ -48,6 +53,8 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return new AntPathMatcher().match("/auth/**", request.getServletPath());
+        String path = request.getServletPath();
+        // Esclude endpoint pubblici dal filtro
+        return path.equals("/api/ricetteEsterne/allRicette") || path.startsWith("/auth/");
     }
 }

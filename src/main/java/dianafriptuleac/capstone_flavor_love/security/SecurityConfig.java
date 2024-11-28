@@ -22,7 +22,6 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -33,10 +32,14 @@ public class SecurityConfig {
         httpSecurity.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-
         httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll());
+                authorizationManagerRequestMatcherRegistry
+                        .requestMatchers("/api/ricetteEsterne/allRicette").permitAll() // Rende pubblico l'endpoint
+                        .requestMatchers("/api/**").authenticated() // Protegge gli altri endpoint
+                        .anyRequest().permitAll()); // Permette l'accesso a tutto il resto
+
         httpSecurity.cors(Customizer.withDefaults());
+
         return httpSecurity.build();
     }
 
@@ -55,6 +58,5 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-
     }
 }
