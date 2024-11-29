@@ -1,4 +1,7 @@
 package dianafriptuleac.capstone_flavor_love.payloads;
 
-public record UtenteLoginResponseDTO(String accessToken) {
+import java.util.UUID;
+
+public record UtenteLoginResponseDTO(String accessToken,
+                                     UUID id, String nome, String cognome, String email, String avatar) {
 }

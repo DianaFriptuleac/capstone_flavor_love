@@ -40,6 +40,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public UtenteLoginResponseDTO login(@RequestBody UtenteLoginDTO body) {
-        return new UtenteLoginResponseDTO(this.authService.checkAllCredentialsAndToken(body));
+        return this.authService.checkAllCredentialsAndToken(body);
     }
 }
