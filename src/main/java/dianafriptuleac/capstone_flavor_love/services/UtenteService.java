@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -62,17 +64,29 @@ public class UtenteService {
 
     public Utente findByIdAndUpdate(UUID utenteId, NewUtenteDTO body) {
         Utente foundUtente = this.findById(utenteId);
-        if (!foundUtente.getEmail().equals(body.email())) {
+        
+        if (body.email() != null && !foundUtente.getEmail().equals(body.email())) {
             this.utenteRepository.findByEmail(body.email()).ifPresent(
                     utente -> {
                         throw new BadRequestException("Email " + body.email() + " è già in uso!");
                     }
             );
+            foundUtente.setEmail(body.email());
         }
-        foundUtente.setNome(body.nome());
-        foundUtente.setCognome(body.cognome());
-        foundUtente.setEmail(body.email());
-        foundUtente.setPassword(bcrypt.encode(body.password()));
+
+        // Aggiorno nome se presente
+        if (body.nome() != null) {
+            foundUtente.setNome(body.nome());
+        }
+
+        if (body.cognome() != null) {
+            foundUtente.setCognome(body.cognome());
+        }
+
+        if (body.password() != null && !body.password().isEmpty()) {
+            foundUtente.setPassword(bcrypt.encode(body.password()));
+        }
+
         return this.utenteRepository.save(foundUtente);
     }
 
@@ -82,7 +96,10 @@ public class UtenteService {
         this.utenteRepository.delete(foundUtente);
     }
 
-    public String uploadAvatar(UUID utenteId, MultipartFile file) {
+    public Map<String, String> uploadAvatar(UUID utenteId, MultipartFile file) {
+        System.out.println("File ricevuto: " + file.getOriginalFilename());
+        System.out.println("Content-Type: " + file.getContentType());
+        System.out.println("Dimensione: " + file.getSize());
         Utente utente = findById(utenteId);
         String url;
 
@@ -94,7 +111,9 @@ public class UtenteService {
             throw new BadRequestException("Errore durante l'upload dell'immagine.");
         }
 
-        return url;
+        Map<String, String> response = new HashMap<>();
+        response.put("avatarUrl", url);
+        return response;
     }
 
 }

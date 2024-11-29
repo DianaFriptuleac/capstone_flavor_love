@@ -1,17 +1,20 @@
 package dianafriptuleac.capstone_flavor_love.controllers;
 
 import dianafriptuleac.capstone_flavor_love.entities.Utente;
+import dianafriptuleac.capstone_flavor_love.exceptions.BadRequestException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewUtenteDTO;
 import dianafriptuleac.capstone_flavor_love.services.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -62,10 +65,15 @@ public class UtenteController {
         utenteService.findByIdAndDelete(currentAuthenticatedUser.getId());
     }
 
-    @PatchMapping("/me/avatar")
+    @PatchMapping(value = "/me/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public String uploadAvatar(@AuthenticationPrincipal Utente currentAuthenticatedUser,
-                               @RequestParam("avatar") MultipartFile file) {
+    public Map<String, String> uploadAvatar(
+            @AuthenticationPrincipal Utente currentAuthenticatedUser,
+            @RequestParam("avatar") MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new BadRequestException("Il file non è stato ricevuto o è vuoto.");
+        }
+        System.out.println("File ricevuto: " + file.getOriginalFilename());
         return utenteService.uploadAvatar(currentAuthenticatedUser.getId(), file);
     }
 

@@ -30,7 +30,7 @@ public class AuthService {
                     utenteFound.getId(),
                     utenteFound.getNome(),
                     utenteFound.getCognome(),
-                    utenteFound.getNome(),
+                    utenteFound.getEmail(),
                     utenteFound.getAvatar()
             );
         } else {
