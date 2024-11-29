@@ -2,6 +2,7 @@ package dianafriptuleac.capstone_flavor_love.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,8 +35,9 @@ public class SecurityConfig {
 
         httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
-                        .requestMatchers("/api/ricetteEsterne/allRicette").permitAll() // Rende pubblico l'endpoint allRicette
-                        .requestMatchers("/api/ricetteEsterne/fetchAll").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/ricetteEsterne/allRicette").permitAll() // Rende pubblico l'endpoint allRicette
+                        .requestMatchers(HttpMethod.GET, "/api/ricetteEsterne/fetchAll").permitAll()  // Endpoint fetchAll pubblico
+                        .requestMatchers(HttpMethod.DELETE, "/api/ricetteEsterne/**").hasRole("ADMIN") // DELETE protetto solo per ADMIN
                         .requestMatchers("/api/**").authenticated() // Protegge gli altri endpoint
                         .anyRequest().permitAll()); // Accesso a tutto il resto
 

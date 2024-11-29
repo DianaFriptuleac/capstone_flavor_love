@@ -52,9 +52,9 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        // Esclude endpoint pubblici dal filtro
-        return path.equals("/api/ricetteEsterne/allRicette") || path.startsWith("/auth/");
+        return path.equals("/api/ricetteEsterne/allRicette") || path.startsWith("/auth/") &&
+                !path.contains("/ricetteEsterne/");
     }
 }

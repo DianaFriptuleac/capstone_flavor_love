@@ -32,6 +32,7 @@ public class Utente implements UserDetails {
 
     private String nome;
     private String cognome;
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
     private String avatar;

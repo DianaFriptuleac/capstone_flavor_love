@@ -31,7 +31,7 @@ public class RicetteEsterneController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRicettaEsterna(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
