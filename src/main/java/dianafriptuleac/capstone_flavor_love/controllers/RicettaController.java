@@ -29,7 +29,7 @@ public class RicettaController {
     //----------------------------- CRUD Ricette ----------------------------------
     // Creo ricetta
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Ricetta createRicetta(@AuthenticationPrincipal Utente currentAuthenticatedUser,
                                  @RequestBody @Validated NewRicettaDTO newRicettaDTO) {
@@ -57,7 +57,7 @@ public class RicettaController {
 
     //Aggiorno ricetta (solo per creatore o ADMIN)
     @PutMapping("/{ricettaId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Ricetta updateRicetta(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
             @PathVariable UUID ricettaId,
@@ -68,7 +68,7 @@ public class RicettaController {
 
     // Cancella ricetta (solo per creatore o ADMIN)
     @DeleteMapping("/{ricettaId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRicetta(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
@@ -80,7 +80,7 @@ public class RicettaController {
     //----------------------------- Gestione Ingredienti----------------------------------
     // Agg. ingrediente alla ricetta
     @PostMapping("/{ricettaId}/ingredienti")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Ricetta addIngrediente(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
@@ -91,7 +91,7 @@ public class RicettaController {
 
     //Modifico ingrediente
     @PutMapping("/{ricettaId}/ingredienti/{ingredienteId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Ricetta updateIngrediiente(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
             @PathVariable UUID ricettaId,
@@ -102,7 +102,7 @@ public class RicettaController {
 
     //Cancello Ingrediente
     @DeleteMapping("/{ricettaId}/ingredienti/{ingredienteId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteIngrediente(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
@@ -113,7 +113,7 @@ public class RicettaController {
 
     //Get ingredienti per sezione
     @GetMapping("/{ricettaId}/ingredienti/sezioni")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Map<String, List<Ingrediente>> getIngredientiBySezione(@PathVariable UUID ricettaId) {
         return ricettaService.getIngrBySezione(ricettaId);
     }

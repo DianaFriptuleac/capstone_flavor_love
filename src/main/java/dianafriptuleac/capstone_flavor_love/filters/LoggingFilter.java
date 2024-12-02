@@ -20,11 +20,19 @@ public class LoggingFilter implements Filter {
         System.out.println("Content-Type: " + httpRequest.getContentType());
         System.out.println("URL: " + httpRequest.getRequestURL());
 
-        if (httpRequest.getContentType() != null && httpRequest.getContentType().contains("multipart/form-data")) {
-            System.out.println("La richiesta contiene multipart/form-data.");
+
+        if (httpRequest.getContentType() != null) {
+            if (httpRequest.getContentType().contains("multipart/form-data")) {
+                System.out.println("La richiesta contiene multipart/form-data.");
+            } else if (httpRequest.getContentType().contains("application/json")) {
+                System.out.println("La richiesta contiene application/json.");
+            } else {
+                System.out.println("Errore: Content-Type non corretto -> " + httpRequest.getContentType());
+            }
         } else {
-            System.out.println("Errore: Content-Type non corretto -> " + httpRequest.getContentType());
+            System.out.println("Errore: Content-Type è null.");
         }
+
 
         chain.doFilter(request, response);
     }
