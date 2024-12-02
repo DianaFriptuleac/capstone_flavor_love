@@ -9,6 +9,7 @@ import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewIngredienteDTO;
 import dianafriptuleac.capstone_flavor_love.payloads.NewRicettaDTO;
 import dianafriptuleac.capstone_flavor_love.repositories.RicettaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -134,6 +135,12 @@ public class RicettaService {
     public Ricetta findById(UUID ricettaId) {
         return this.ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new NotFoundException(String.valueOf(ricettaId)));
+    }
+
+    //-------------------------------find by Id con immagine------------------------------------
+    public Ricetta getRicettaConImmagini(UUID id) {
+        return ricettaRepository.findByIdWithImages(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ricetta non trovata"));
     }
 
     //---------------------------Aggiungo ingredienti----------------------

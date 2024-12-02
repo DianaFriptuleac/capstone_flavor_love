@@ -13,4 +13,6 @@ public interface RicettarioRepository extends JpaRepository<Ricettario, UUID> {
 
     // ignora il case e  trova anche per pezzo di nome
     Optional<Ricettario> findByNomeContainingIgnoreCaseAndUtenteId(String nome, UUID utente);
+
+
 }

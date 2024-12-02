@@ -55,6 +55,12 @@ public class RicettaController {
         return ricettaService.findByName(titolo, page, size, sortBy);
     }
 
+    // ccerco per id con immagine
+    @GetMapping("/{id}")
+    public Ricetta getRicetta(@PathVariable UUID id) {
+        return ricettaService.getRicettaConImmagini(id);
+    }
+    
     //Aggiorno ricetta (solo per creatore o ADMIN)
     @PutMapping("/{ricettaId}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")

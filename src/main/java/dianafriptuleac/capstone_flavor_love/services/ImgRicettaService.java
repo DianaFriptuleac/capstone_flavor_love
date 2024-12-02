@@ -38,7 +38,7 @@ public class ImgRicettaService {
         Ricetta ricetta = ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new IllegalArgumentException("Ricetta non trovata con ID: " + ricettaId));
 
-        if (!ricetta.getId().equals(currentUser.getId()) && !isAdmin(currentUser)) {
+        if (!ricetta.getUtente().getId().equals(currentUser.getId()) && !isAdmin(currentUser)) {
             throw new UnauthorizedException("Non hai i permessi per aggiungere un'immagine a questa ricetta.");
         }
 

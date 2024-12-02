@@ -36,6 +36,7 @@ public class ImgRicettaController {
     public void deleteImg(@AuthenticationPrincipal Utente currentAuthenticatedUser,
                           @PathVariable UUID imgId) {
         boolean isAdmin = currentAuthenticatedUser.getAuthorities().stream()
+                
                 .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
 
         imgRicettaService.deleteImg(imgId, currentAuthenticatedUser.getId(), isAdmin);

@@ -1,6 +1,7 @@
 package dianafriptuleac.capstone_flavor_love.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dianafriptuleac.capstone_flavor_love.enums.CostoRicetta;
 import dianafriptuleac.capstone_flavor_love.enums.DifficoltaRicetta;
 import jakarta.persistence.*;
@@ -49,8 +50,8 @@ public class Ricetta {
     private List<CategoriaRicetta> categorie = new ArrayList<>();
 
     // Immagini
-    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ImgRicetta> img = new ArrayList<>();
 
 

@@ -1,5 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class ImgRicetta {
 
     @ManyToOne
     @JoinColumn(name = "ricetta_id", nullable = false)
+    @JsonBackReference
     private Ricetta ricetta;
 
     private String url;

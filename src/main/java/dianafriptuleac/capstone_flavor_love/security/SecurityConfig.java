@@ -54,21 +54,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // Per poter configurare tutto ciò che è relativo alla sicurezza devo configurare Spring Security tramite questo apposito bean, il quale
-        // mi consentirà di:
-        // - disabilitare comportamenti di default che non ci interessano
-        httpSecurity.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable()); // Non voglio il form di login (avremo React per quello)
-        httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable()); // Non voglio la protezione da CSRF (perché non ci serve
-        // ed inoltre mi complicherebbe anche il lato FE)
+
+        httpSecurity.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable());
+        httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+
         httpSecurity.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        // Non vogliamo utilizzare le Sessioni (perché JWT NON utilizza le sessioni)
         httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll()); // Disabilitiamo il 401 che riceviamo di default
-        // per OGNI richiesta che facciamo su OGNI endpoint
-        // - personalizzare il comportamento di alcune funzionalità preesistenti
-        // - aggiungere filtri personalizzati alla Filter Chain
-        httpSecurity.cors(Customizer.withDefaults()); // <-- OBBLIGATORIA SE VOGLIAMO CONFIGURARE I CORS GLOBALMENTE CON UN BEAN
+                authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll());
+        httpSecurity.cors(Customizer.withDefaults());
         return httpSecurity.build();
     }
 
