@@ -36,6 +36,7 @@ public class RicettaController {
         return ricettaService.saveRicetta(newRicettaDTO, currentAuthenticatedUser);
     }
 
+
     // Get di tutte le ricette
     @GetMapping
     public Page<Ricetta> getAllRicette(
@@ -60,7 +61,7 @@ public class RicettaController {
     public Ricetta getRicetta(@PathVariable UUID id) {
         return ricettaService.getRicettaConImmagini(id);
     }
-    
+
     //Aggiorno ricetta (solo per creatore o ADMIN)
     @PutMapping("/{ricettaId}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")

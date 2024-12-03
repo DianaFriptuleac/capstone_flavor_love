@@ -170,4 +170,5 @@ public class RicettaService {
                 .collect(Collectors.groupingBy(Ingrediente::getSezione));
     }
 
+
 }
