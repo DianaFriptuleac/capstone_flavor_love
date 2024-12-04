@@ -36,7 +36,7 @@ public class ImgRicettaController {
     public void deleteImg(@AuthenticationPrincipal Utente currentAuthenticatedUser,
                           @PathVariable UUID imgId) {
         boolean isAdmin = currentAuthenticatedUser.getAuthorities().stream()
-                
+
                 .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
 
         imgRicettaService.deleteImg(imgId, currentAuthenticatedUser.getId(), isAdmin);
@@ -47,6 +47,18 @@ public class ImgRicettaController {
                                     @RequestParam(defaultValue = "8") int size,
                                     @RequestParam(defaultValue = "id") String sortBy) {
         return this.imgRicettaService.findAll(page, size, sortBy);
+    }
+
+    //get img in base alla ricetta
+    @GetMapping("/ricetta/{ricettaId}")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ImgRicetta> getImagesByRicettaId(
+            @PathVariable UUID ricettaId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return imgRicettaService.findByRicettaId(ricettaId, page, size, sortBy);
     }
 
 }

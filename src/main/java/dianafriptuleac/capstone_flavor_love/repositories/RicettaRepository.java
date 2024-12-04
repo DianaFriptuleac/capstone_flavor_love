@@ -17,5 +17,9 @@ public interface RicettaRepository extends JpaRepository<Ricetta, UUID> {
     @Query("SELECT r FROM Ricetta r LEFT JOIN FETCH r.img WHERE r.id = :id")
     Optional<Ricetta> findByIdWithImages(@Param("id") UUID id);
 
+    //query per trovare ricetta per id utente
+    @Query("SELECT r FROM Ricetta r WHERE r.utente.id = :utenteId")
+    Page<Ricetta> findByUtenteId(@Param("utenteId") UUID utenteId, Pageable pageable);
+
 
 }

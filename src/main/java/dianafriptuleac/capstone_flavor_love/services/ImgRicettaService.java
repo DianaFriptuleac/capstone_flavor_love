@@ -79,4 +79,12 @@ public class ImgRicettaService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.imgRicettaRepository.findAll(pageable);
     }
+
+
+    //cerco img per ricetta
+    public Page<ImgRicetta> findByRicettaId(UUID ricettaId, int page, int size, String sortBy) {
+        return imgRicettaRepository.findByRicettaId(ricettaId, PageRequest.of(page, size, Sort.by(sortBy)));
+    }
+
+
 }

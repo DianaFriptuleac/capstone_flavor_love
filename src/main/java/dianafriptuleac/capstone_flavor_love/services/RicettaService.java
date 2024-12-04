@@ -174,10 +174,18 @@ public class RicettaService {
                 .collect(Collectors.groupingBy(Ingrediente::getSezione));
     }
 
+    //----------------------- get dellaa lista ingredienti della ricetta----------------
     public List<Ingrediente> getIngredientiByRicettaId(UUID ricettaId) {
         Ricetta ricetta = ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new NotFoundException("Ricetta non trovata"));
         return ricetta.getIngredienti();
     }
+
+    //----------------------- cerco ricette per id utente ----------------
+    public Page<Ricetta> findRicetteByUtente(UUID utenteId, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return ricettaRepository.findByUtenteId(utenteId, pageable);
+    }
+
 
 }

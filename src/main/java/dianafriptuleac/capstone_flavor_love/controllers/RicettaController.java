@@ -60,8 +60,21 @@ public class RicettaController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "titolo") String sortBy) {
+        System.out.println("Richiesta ricevuta all");
         return ricettaService.findAll(page, size, sortBy);
     }
+
+    //Get per utente
+    @GetMapping("/utente/{utenteId}")
+    public Page<Ricetta> getRicetteByUtente(
+            @PathVariable UUID utenteId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "titolo") String sortBy) {
+        System.out.println("Richiesta ricevuta per l'utente con ID: {}");
+        return ricettaService.findRicetteByUtente(utenteId, page, size, sortBy);
+    }
+
 
     // Cerco ricetta per titolo
     @GetMapping("/cerca")
@@ -146,6 +159,7 @@ public class RicettaController {
         return ricettaService.getIngrBySezione(ricettaId);
     }
 
+    // get lista ingredienti per ricetta
     @GetMapping("/{id}/ingredienti")
     public List<Ingrediente> getIngredienti(@PathVariable UUID id) {
         return ricettaService.getIngredientiByRicettaId(id);
