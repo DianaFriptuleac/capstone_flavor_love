@@ -139,9 +139,13 @@ public class RicettaService {
 
     //-------------------------------find by Id con immagine------------------------------------
     public Ricetta getRicettaConImmagini(UUID id) {
-        return ricettaRepository.findByIdWithImages(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ricetta non trovata"));
+        System.out.println("Ricetta ID ricevuto: " + id);
+        Ricetta ricetta = ricettaRepository.findByIdWithImages(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ricetta non trovata con ID: " + id));
+        System.out.println("Ricetta trovata: " + ricetta);
+        return ricetta;
     }
+
 
     //---------------------------Aggiungo ingredienti----------------------
     public Ricetta aggIngredienti(UUID ricettaId, NewIngredienteDTO newIngredienteDTO, Utente utente) {
@@ -173,7 +177,7 @@ public class RicettaService {
     public List<Ingrediente> getIngredientiByRicettaId(UUID ricettaId) {
         Ricetta ricetta = ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new NotFoundException("Ricetta non trovata"));
-        return ricetta.getIngredienti(); // Assicurati che la relazione sia corretta
+        return ricetta.getIngredienti();
     }
 
 }

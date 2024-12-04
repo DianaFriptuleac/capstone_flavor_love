@@ -14,7 +14,8 @@ public interface RicettaRepository extends JpaRepository<Ricetta, UUID> {
     Page<Ricetta> findByTitoloContainingIgnoreCase(String titolo, Pageable pageable);
 
     // carico la ricetta includento l'immagine
-    @Query("SELECT r FROM Ricetta r JOIN FETCH r.img WHERE r.id = :id")
+    @Query("SELECT r FROM Ricetta r LEFT JOIN FETCH r.img WHERE r.id = :id")
     Optional<Ricetta> findByIdWithImages(@Param("id") UUID id);
+
 
 }
