@@ -20,7 +20,7 @@ public class ListaSpesaController {
     @Autowired
     private ListaSpesaService listaSpesaService;
 
-    //Agg. ingredienti da ricette
+  /*  //Agg. ingredienti da ricette
     @PostMapping("/{ricettaId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ListaSpesa aggiungiIngredientiDaRicetta(
@@ -28,7 +28,7 @@ public class ListaSpesaController {
             @PathVariable UUID ricettaId) {
         return listaSpesaService.addIngredientidaRicetta(ricettaId, currentAuthenticatedUser);
     }
-
+*/
 
     //Modifico quantita ingredienti
     @PutMapping("/ingrediente/{ingredienteId}")

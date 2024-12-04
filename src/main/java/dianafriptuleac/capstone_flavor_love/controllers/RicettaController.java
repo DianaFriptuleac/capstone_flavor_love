@@ -5,6 +5,7 @@ import dianafriptuleac.capstone_flavor_love.entities.Ricetta;
 import dianafriptuleac.capstone_flavor_love.entities.Utente;
 import dianafriptuleac.capstone_flavor_love.payloads.NewIngredienteDTO;
 import dianafriptuleac.capstone_flavor_love.payloads.NewRicettaDTO;
+import dianafriptuleac.capstone_flavor_love.services.ImgRicettaService;
 import dianafriptuleac.capstone_flavor_love.services.RicettaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,9 @@ public class RicettaController {
     @Autowired
     private RicettaService ricettaService;
 
+    @Autowired
+    private ImgRicettaService imgRicettaService;
+
 
     //----------------------------- CRUD Ricette ----------------------------------
     // Creo ricetta
@@ -36,6 +41,18 @@ public class RicettaController {
         return ricettaService.saveRicetta(newRicettaDTO, currentAuthenticatedUser);
     }
 
+    @PostMapping("/{ricettaId}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public String uploadImg(
+            @AuthenticationPrincipal Utente currentAuthenticatedUser,
+            @PathVariable UUID ricettaId,
+            @RequestParam("file") MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Il file non può essere vuoto");
+        }
+        return imgRicettaService.addImg(ricettaId, file, currentAuthenticatedUser);
+    }
 
     // Get di tutte le ricette
     @GetMapping
@@ -56,7 +73,7 @@ public class RicettaController {
         return ricettaService.findByName(titolo, page, size, sortBy);
     }
 
-    // ccerco per id con immagine
+    // cerco per id con immagine
     @GetMapping("/{id}")
     public Ricetta getRicetta(@PathVariable UUID id) {
         return ricettaService.getRicettaConImmagini(id);
@@ -89,12 +106,16 @@ public class RicettaController {
     @PostMapping("/{ricettaId}/ingredienti")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public Ricetta addIngrediente(
+    public Ricetta addIngredienti(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
             @PathVariable UUID ricettaId,
-            @RequestBody @Validated NewIngredienteDTO newIngredienteDTO) {
-        return ricettaService.aggIngredienti(ricettaId, newIngredienteDTO, currentAuthenticatedUser);
+            @RequestBody @Validated List<NewIngredienteDTO> newIngredienti) {
+        for (NewIngredienteDTO ingrediente : newIngredienti) {
+            ricettaService.aggIngredienti(ricettaId, ingrediente, currentAuthenticatedUser);
+        }
+        return ricettaService.findById(ricettaId);
     }
+
 
     //Modifico ingrediente
     @PutMapping("/{ricettaId}/ingredienti/{ingredienteId}")
@@ -125,4 +146,8 @@ public class RicettaController {
         return ricettaService.getIngrBySezione(ricettaId);
     }
 
+    @GetMapping("/{id}/ingredienti")
+    public List<Ingrediente> getIngredienti(@PathVariable UUID id) {
+        return ricettaService.getIngredientiByRicettaId(id);
+    }
 }

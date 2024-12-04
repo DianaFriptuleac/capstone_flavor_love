@@ -1,6 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class Ingrediente {
 
     @ManyToOne
     @JoinColumn(name = "ricetta_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Ricetta ricetta;
 
     public Ingrediente(String nome, String dosaggio, String sezione) {

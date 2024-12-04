@@ -170,5 +170,10 @@ public class RicettaService {
                 .collect(Collectors.groupingBy(Ingrediente::getSezione));
     }
 
+    public List<Ingrediente> getIngredientiByRicettaId(UUID ricettaId) {
+        Ricetta ricetta = ricettaRepository.findById(ricettaId)
+                .orElseThrow(() -> new NotFoundException("Ricetta non trovata"));
+        return ricetta.getIngredienti(); // Assicurati che la relazione sia corretta
+    }
 
 }

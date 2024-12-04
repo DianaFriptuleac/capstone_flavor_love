@@ -63,7 +63,7 @@ public class Ricetta {
 
     //Ingredienti
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonManagedReference
     @ToString.Exclude
     private List<Ingrediente> ingredienti = new ArrayList<>();
 

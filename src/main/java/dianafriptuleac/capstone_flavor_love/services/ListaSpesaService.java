@@ -1,6 +1,8 @@
 package dianafriptuleac.capstone_flavor_love.services;
 
-import dianafriptuleac.capstone_flavor_love.entities.*;
+import dianafriptuleac.capstone_flavor_love.entities.ListaSpesa;
+import dianafriptuleac.capstone_flavor_love.entities.ListaSpesaElement;
+import dianafriptuleac.capstone_flavor_love.entities.Utente;
 import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewListaSpesaElementDTO;
 import dianafriptuleac.capstone_flavor_love.repositories.ListaSpesaRepository;
@@ -31,7 +33,7 @@ public class ListaSpesaService {
     }
 
     //Aggiungo gli ingredienti
-    public ListaSpesa addIngredientidaRicetta(UUID ricettaId, Utente utente) {
+ /*   public ListaSpesa addIngredientidaRicetta(UUID ricettaId, Utente utente) {
         Ricetta ricetta = ricettaService.findById(ricettaId);
         ListaSpesa listaSpesa = getListaSpesaByUtente(utente);
 
@@ -48,7 +50,7 @@ public class ListaSpesaService {
         }
         return listaSpesaRepository.save(listaSpesa);
     }
-
+*/
     // Modifico la quantita degli ingredienti
     public ListaSpesa updateQuantitaIngredienti(UUID ingredientiId, NewListaSpesaElementDTO updatedElementDTO, Utente utente) {
         ListaSpesaElement element = listaSpesaElementService.findById(ingredientiId);
