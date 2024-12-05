@@ -3,6 +3,7 @@ package dianafriptuleac.capstone_flavor_love.controllers;
 import dianafriptuleac.capstone_flavor_love.entities.Ricettario;
 import dianafriptuleac.capstone_flavor_love.entities.Utente;
 import dianafriptuleac.capstone_flavor_love.payloads.NewRicettarioDTO;
+import dianafriptuleac.capstone_flavor_love.payloads.RispostaRicettarioDTO;
 import dianafriptuleac.capstone_flavor_love.services.RicettarioService;
 import dianafriptuleac.capstone_flavor_love.services.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +68,22 @@ public class RicettarioController {
         return ricettarioService.getRicettariPerUtente(utente, pageable);
     }
 
+    //cerco ricettario con la lista ricette
+    @GetMapping("/{id}")
+    public RispostaRicettarioDTO getRicettarioConRicette(
+            @PathVariable UUID id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal Utente utente) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ricettarioService.getRicettarioConRicette(id, utente, pageable);
+    }
+
+
     //Cancello una ricetta
     @DeleteMapping("/{ricettarioId}/ricette/{ricettaId}")
     @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Ricettario removeRicettaFromRicettario(@PathVariable UUID ricettarioId,
                                                   @PathVariable UUID ricettaId,
                                                   @AuthenticationPrincipal Utente utente) {
@@ -79,6 +93,7 @@ public class RicettarioController {
     //Cancello intero ricettario
     @DeleteMapping("/{ricettarioId}")
     @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRicettario(@PathVariable UUID ricettarioId,
                                  @AuthenticationPrincipal Utente utente) {
         ricettarioService.deleteRicettario(ricettarioId, utente);

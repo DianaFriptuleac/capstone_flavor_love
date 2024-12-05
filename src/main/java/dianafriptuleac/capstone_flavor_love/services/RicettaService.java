@@ -8,6 +8,7 @@ import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
 import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewIngredienteDTO;
 import dianafriptuleac.capstone_flavor_love.payloads.NewRicettaDTO;
+import dianafriptuleac.capstone_flavor_love.payloads.RispostaRicettaDTO;
 import dianafriptuleac.capstone_flavor_love.repositories.RicettaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,5 +188,14 @@ public class RicettaService {
         return ricettaRepository.findByUtenteId(utenteId, pageable);
     }
 
+    //----------------------- cerco ricette per ricettario ----------------
+    public Page<RispostaRicettaDTO> getRicetteByRicettarioId(UUID ricettarioId, Pageable pageable) {
+        Page<Ricetta> ricettePage = ricettaRepository.findByRicettariId(ricettarioId, pageable);
+        return ricettePage.map(ricetta -> new RispostaRicettaDTO(
+                ricetta.getId(),
+                ricetta.getTitolo(),
+                ricetta.getImg().isEmpty() ? null : ricetta.getImg().get(0).getUrl()
+        ));
+    }
 
 }

@@ -21,5 +21,7 @@ public interface RicettaRepository extends JpaRepository<Ricetta, UUID> {
     @Query("SELECT r FROM Ricetta r WHERE r.utente.id = :utenteId")
     Page<Ricetta> findByUtenteId(@Param("utenteId") UUID utenteId, Pageable pageable);
 
+    //cerca ricetta per ricettario
+    Page<Ricetta> findByRicettariId(UUID ricettarioId, Pageable pageable);
 
 }

@@ -7,6 +7,8 @@ import dianafriptuleac.capstone_flavor_love.exceptions.BadRequestException;
 import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
 import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewRicettarioDTO;
+import dianafriptuleac.capstone_flavor_love.payloads.RispostaRicettaDTO;
+import dianafriptuleac.capstone_flavor_love.payloads.RispostaRicettarioDTO;
 import dianafriptuleac.capstone_flavor_love.repositories.RicettarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,17 @@ public class RicettarioService {
             throw new UnauthorizedException("Non sei autorizzato a modificare questo ricettario");
         }
         return ricettario;
+    }
+
+    //get ricettario con le ricette
+    public RispostaRicettarioDTO getRicettarioConRicette(UUID ricettarioId, Utente utente, Pageable pageable) {
+        Ricettario ricettario = findById(ricettarioId, utente);
+        Page<RispostaRicettaDTO> ricettePage = ricettaService.getRicetteByRicettarioId(ricettarioId, pageable);
+        return new RispostaRicettarioDTO(
+                ricettario.getId(),
+                ricettario.getNome(),
+                ricettePage
+        );
     }
 
 
