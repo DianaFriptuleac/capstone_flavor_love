@@ -96,4 +96,9 @@ public class RicetteEsterneService {
         }
         ricetteEsterneRepository.delete(ricetteEsterne);
     }
+
+    //cerco per titolo
+    public Page<RicetteEsterne> cercaByTitolo(String query, Pageable pageable) {
+        return ricetteEsterneRepository.searchByTitle(query, pageable);
+    }
 }

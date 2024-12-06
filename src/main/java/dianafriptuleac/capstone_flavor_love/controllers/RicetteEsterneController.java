@@ -39,4 +39,12 @@ public class RicetteEsterneController {
 
         ricetteEsterneService.removeRicetta(id, currentAuthenticatedUser, "ADMIN");
     }
+
+    //cerca per nome
+    @GetMapping("/cerca")
+    public Page<RicetteEsterne> searchRicetteByTitolo(
+            @RequestParam String query,
+            Pageable pageable) {
+        return ricetteEsterneService.cercaByTitolo(query, pageable);
+    }
 }
