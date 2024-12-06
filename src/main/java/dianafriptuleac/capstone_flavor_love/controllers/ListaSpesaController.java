@@ -20,19 +20,19 @@ public class ListaSpesaController {
     @Autowired
     private ListaSpesaService listaSpesaService;
 
-  /*  //Agg. ingredienti da ricette
+    //Agg. ingredienti da ricette
     @PostMapping("/{ricettaId}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ListaSpesa aggiungiIngredientiDaRicetta(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
             @PathVariable UUID ricettaId) {
         return listaSpesaService.addIngredientidaRicetta(ricettaId, currentAuthenticatedUser);
     }
-*/
+
 
     //Modifico quantita ingredienti
     @PutMapping("/ingrediente/{ingredienteId}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ListaSpesa updateQuantita(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
             @PathVariable UUID ingredienteId,
@@ -42,7 +42,7 @@ public class ListaSpesaController {
 
     //Elimino ingrediente dalla lista
     @DeleteMapping("/ingrediente/{ingredienteId}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeIngrediente(
             @AuthenticationPrincipal Utente currentAuthenticatedUser,
@@ -52,7 +52,7 @@ public class ListaSpesaController {
 
     // Recupero la lista della spesa
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ListaSpesa getListaSpesa(
             @AuthenticationPrincipal Utente currentAuthenticatedUser) {
         return listaSpesaService.getListaSpesaByUtente(currentAuthenticatedUser);
