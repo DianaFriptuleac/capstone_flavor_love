@@ -46,7 +46,7 @@ public class Ricetta {
             inverseJoinColumns = @JoinColumn(name = "categoria_id")
     )
     @ToString.Exclude
-    @JsonIgnore
+    @JsonManagedReference
     private List<CategoriaRicetta> categorie = new ArrayList<>();
 
     // Immagini

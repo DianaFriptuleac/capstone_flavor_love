@@ -198,4 +198,16 @@ public class RicettaService {
         ));
     }
 
+    //----------------------- cerco ricette per categorie----------------
+    public Page<Ricetta> findRicetteByCategoria(String categoria, Pageable pageable) {
+        String categoriaLowerCase = categoria.toLowerCase(); // lowercase
+        Page<Ricetta> ricetteFound = ricettaRepository.findByCategoriaNome(categoriaLowerCase, pageable);
+
+        if (ricetteFound.isEmpty()) {
+            throw new NotFoundException("Nessuna ricetta trovata per la categoria: " + categoria);
+        }
+
+        return ricetteFound;
+    }
+
 }

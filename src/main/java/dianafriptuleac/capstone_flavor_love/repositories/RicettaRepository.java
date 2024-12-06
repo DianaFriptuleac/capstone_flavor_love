@@ -24,4 +24,9 @@ public interface RicettaRepository extends JpaRepository<Ricetta, UUID> {
     //cerca ricetta per ricettario
     Page<Ricetta> findByRicettariId(UUID ricettarioId, Pageable pageable);
 
+    //cerco ricetta per categorie
+    @Query("SELECT r FROM Ricetta r JOIN r.categorie c WHERE LOWER(c.nome) = LOWER(:categoria)")
+    Page<Ricetta> findByCategoriaNome(@Param("categoria") String categoria, Pageable pageable);
+
+
 }

@@ -1,5 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class CategoriaRicetta {
 
     @ManyToMany(mappedBy = "categorie")
     @ToString.Exclude
+    @JsonBackReference
     private List<Ricetta> ricette = new ArrayList<>();
 
     public CategoriaRicetta(String nome, String descrizione) {

@@ -9,6 +9,9 @@ import dianafriptuleac.capstone_flavor_love.services.ImgRicettaService;
 import dianafriptuleac.capstone_flavor_love.services.RicettaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -164,4 +167,17 @@ public class RicettaController {
     public List<Ingrediente> getIngredienti(@PathVariable UUID id) {
         return ricettaService.getIngredientiByRicettaId(id);
     }
+
+    //get ricetta per categorie
+    @GetMapping("/categoria")
+    public Page<Ricetta> getByCategorie(
+            @RequestParam String categoria,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "titolo") String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return ricettaService.findRicetteByCategoria(categoria, pageable);
+    }
+
+
 }
