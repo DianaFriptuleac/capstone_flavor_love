@@ -57,4 +57,12 @@ public class ListaSpesaController {
             @AuthenticationPrincipal Utente currentAuthenticatedUser) {
         return listaSpesaService.getListaSpesaByUtente(currentAuthenticatedUser);
     }
+
+    //svuoto la lista spesa
+    @DeleteMapping("/clear")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void clearListaSpesa(@AuthenticationPrincipal Utente currentAuthenticatedUser) {
+        listaSpesaService.clearListaSpesa(currentAuthenticatedUser.getId());
+    }
 }

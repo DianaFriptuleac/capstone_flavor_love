@@ -1,6 +1,7 @@
 package dianafriptuleac.capstone_flavor_love.services;
 
 import dianafriptuleac.capstone_flavor_love.entities.*;
+import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
 import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewListaSpesaElementDTO;
 import dianafriptuleac.capstone_flavor_love.repositories.ListaSpesaRepository;
@@ -72,4 +73,13 @@ public class ListaSpesaService {
         }
         listaSpesaElementService.findByIdAndDelete(ingredienteId);
     }
+
+    //svuoto lista spesa
+    public void clearListaSpesa(UUID utenteId) {
+        ListaSpesa listaSpesa = listaSpesaRepository.findByUtenteId(utenteId)
+                .orElseThrow(() -> new NotFoundException("Lista spesa non trovata"));
+        listaSpesa.getElements().clear(); //svuoto tutta la lista
+        listaSpesaRepository.save(listaSpesa);
+    }
+
 }
