@@ -74,7 +74,7 @@ public class Ricetta {
     private List<ListaSpesaElement> listaSpesaElements = new ArrayList<>();
 
     //ricettari
-    @ManyToMany(mappedBy = "ricette", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "ricette")
     @JsonIgnore
     private List<Ricettario> ricettari = new ArrayList<>();
 

@@ -1,9 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.services;
 
-import dianafriptuleac.capstone_flavor_love.entities.CategoriaRicetta;
-import dianafriptuleac.capstone_flavor_love.entities.Ingrediente;
-import dianafriptuleac.capstone_flavor_love.entities.Ricetta;
-import dianafriptuleac.capstone_flavor_love.entities.Utente;
+import dianafriptuleac.capstone_flavor_love.entities.*;
 import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
 import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewIngredienteDTO;
@@ -11,6 +8,7 @@ import dianafriptuleac.capstone_flavor_love.payloads.NewRicettaDTO;
 import dianafriptuleac.capstone_flavor_love.payloads.RispostaRicettaDTO;
 import dianafriptuleac.capstone_flavor_love.repositories.RicettaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -40,6 +38,14 @@ public class RicettaService {
 
     @Autowired
     private ListaSpesaElementService listaSpesaElementService;
+
+    @Lazy
+    @Autowired
+    private LikedService likedService;
+
+    @Autowired
+    @Lazy
+    private RicettarioService ricettarioService;
 
 
     // -------------------------------- Creo la ricetta ----------------------------
@@ -89,6 +95,7 @@ public class RicettaService {
     }
 
     //--------------------------------Cancello Ricetta ------------------------------
+    @Transactional
     public void deleteRicetta(UUID ricettaId, Utente currentAuthenticatedUser, String adminRole) {
         Ricetta ricetta = ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new NotFoundException("Ricetta con ID " + ricettaId + " non trovata!"));
@@ -101,6 +108,13 @@ public class RicettaService {
             throw new UnauthorizedException("Non hai i permessi per eliminare questa ricetta!");
 
         }
+
+        // Rimuovo la ricetta da tutti i ricettari
+        for (Ricettario ricettario : ricetta.getRicettari()) {
+            ricettarioService.removeRicettaFromRicettario(ricettario.getId(), ricetta.getId(), currentAuthenticatedUser);
+        }
+        // Rimuovo la ricetta da tutti i liked
+        likedService.deleteByRicetta(ricetta);
         ricettaRepository.delete(ricetta);
     }
 
