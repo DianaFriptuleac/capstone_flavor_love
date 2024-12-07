@@ -101,4 +101,18 @@ public class RicetteEsterneService {
     public Page<RicetteEsterne> cercaByTitolo(String query, Pageable pageable) {
         return ricetteEsterneRepository.searchByTitle(query, pageable);
     }
+
+    //cerco per id
+    public RicetteEsterne getRicettaById(UUID id) {
+        RicetteEsterne ricetta = ricetteEsterneRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("Ricetta esterna con ID: " + id + " non è stata trovata"));
+
+        // Rimuovo i tag HTML dalle instructions con Regex
+        if (ricetta.getInstructions() != null) {
+            ricetta.setInstructions(ricetta.getInstructions().replaceAll("<[^>]*>", ""));
+        }
+
+        return ricetta;
+    }
+
 }

@@ -47,4 +47,10 @@ public class RicetteEsterneController {
             Pageable pageable) {
         return ricetteEsterneService.cercaByTitolo(query, pageable);
     }
+
+    //cerco per id
+    @GetMapping("/{id}")
+    public RicetteEsterne getRicettaById(@PathVariable UUID id) {
+        return ricetteEsterneService.getRicettaById(id);
+    }
 }
