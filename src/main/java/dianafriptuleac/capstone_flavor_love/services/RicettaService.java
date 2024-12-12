@@ -1,6 +1,9 @@
 package dianafriptuleac.capstone_flavor_love.services;
 
-import dianafriptuleac.capstone_flavor_love.entities.*;
+import dianafriptuleac.capstone_flavor_love.entities.CategoriaRicetta;
+import dianafriptuleac.capstone_flavor_love.entities.Ingrediente;
+import dianafriptuleac.capstone_flavor_love.entities.Ricetta;
+import dianafriptuleac.capstone_flavor_love.entities.Utente;
 import dianafriptuleac.capstone_flavor_love.exceptions.NotFoundException;
 import dianafriptuleac.capstone_flavor_love.exceptions.UnauthorizedException;
 import dianafriptuleac.capstone_flavor_love.payloads.NewIngredienteDTO;
@@ -110,9 +113,8 @@ public class RicettaService {
         }
 
         // Rimuovo la ricetta da tutti i ricettari
-        for (Ricettario ricettario : ricetta.getRicettari()) {
-            ricettarioService.removeRicettaFromRicettario(ricettario.getId(), ricetta.getId(), currentAuthenticatedUser);
-        }
+        ricetta.getRicettari().forEach(ricettario ->
+                ricettarioService.removeRicettaFromRicettario(ricettario.getId(), ricetta.getId(), currentAuthenticatedUser));
         // Rimuovo la ricetta da tutti i liked
         likedService.deleteByRicetta(ricetta);
         ricettaRepository.delete(ricetta);

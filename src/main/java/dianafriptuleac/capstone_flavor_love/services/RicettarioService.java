@@ -27,11 +27,11 @@ public class RicettarioService {
     private RicettaService ricettaService;
 
     //frindById Ricettario
-    public Ricettario findById(UUID ricettarioId, Utente utente) {
+    public Ricettario findById(UUID ricettarioId, Utente utente, boolean isAdmin) {
         Ricettario ricettario = ricettarioRepository.findById(ricettarioId).orElseThrow(() ->
                 new NotFoundException("Il ricettario con l'id " + ricettarioId + "non è stato trovato!"));
 
-        if (!ricettario.getUtente().getId().equals(utente.getId())) {
+        if (!ricettario.getUtente().getId().equals(utente.getId()) && !isAdmin) {
             throw new UnauthorizedException("Non sei autorizzato a modificare questo ricettario");
         }
         return ricettario;
@@ -39,7 +39,9 @@ public class RicettarioService {
 
     //get ricettario con le ricette
     public RispostaRicettarioDTO getRicettarioConRicette(UUID ricettarioId, Utente utente, Pageable pageable) {
-        Ricettario ricettario = findById(ricettarioId, utente);
+        boolean isAdmin = utente.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+        Ricettario ricettario = findById(ricettarioId, utente, isAdmin);
         Page<RispostaRicettaDTO> ricettePage = ricettaService.getRicetteByRicettarioId(ricettarioId, pageable);
         return new RispostaRicettarioDTO(
                 ricettario.getId(),
@@ -75,7 +77,9 @@ public class RicettarioService {
 
     //Aggiungo una ricetta al ricettario
     public Ricettario addRicettaToRicettario(UUID ricettarioId, UUID ricettaId, Utente utente) {
-        Ricettario ricettario = findById(ricettarioId, utente);
+        boolean isAdmin = utente.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+        Ricettario ricettario = findById(ricettarioId, utente, isAdmin);
         Ricetta ricetta = ricettaService.findById(ricettaId);
         if (ricettario.getRicette().contains(ricetta)) {
             throw new BadRequestException("La ricetta è già presente nel ricettario");
@@ -96,7 +100,9 @@ public class RicettarioService {
 
     //Cancello una ricetta dal ricettario
     public Ricettario removeRicettaFromRicettario(UUID ricettarioId, UUID ricettaId, Utente utente) {
-        Ricettario ricettario = findById(ricettarioId, utente);
+        boolean isAdmin = utente.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+        Ricettario ricettario = findById(ricettarioId, utente, isAdmin);
         Ricetta ricetta = ricettaService.findById(ricettaId);
 
         if (!ricettario.getRicette().contains(ricetta)) {
@@ -109,7 +115,9 @@ public class RicettarioService {
 
     //Cancello intero ricettario
     public void deleteRicettario(UUID ricettarioId, Utente utente) {
-        Ricettario ricettario = findById(ricettarioId, utente);
+        boolean isAdmin = utente.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+        Ricettario ricettario = findById(ricettarioId, utente, isAdmin);
         ricettarioRepository.delete(ricettario);
     }
 }
