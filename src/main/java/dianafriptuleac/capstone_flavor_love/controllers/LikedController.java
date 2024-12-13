@@ -26,7 +26,6 @@ public class LikedController {
         return likedService.addRicettaToLiked(ricettaId, currentAuthenticatedUser);
     }
 
-
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public Liked getLiked(

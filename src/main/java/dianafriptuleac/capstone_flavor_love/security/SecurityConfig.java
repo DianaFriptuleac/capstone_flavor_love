@@ -21,37 +21,6 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-  /*  @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable());
-
-        httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
-
-        httpSecurity.sessionManagement(httpSecuritySessionManagementConfigurer ->
-                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-      / httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry
-                        .requestMatchers(HttpMethod.GET, "/api/ricetteEsterne/allRicette").permitAll() // Rende pubblico l'endpoint allRicette
-                        .requestMatchers(HttpMethod.GET, "/api/ricetteEsterne/fetchAll").permitAll()  // Endpoint fetchAll pubblico
-                        .requestMatchers(HttpMethod.DELETE, "/api/ricetteEsterne/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/ricette").hasAnyAuthority("USER", "ADMIN") // Endpoint protetto// DELETE protetto solo per ADMIN
-                        .requestMatchers("/api/**").authenticated() // Protegge gli altri endpoint
-                        .anyRequest().permitAll()); // Accesso a tutto il resto
-
-        httpSecurity.cors(Customizer.withDefaults());
-
-        return httpSecurity.build();
-
-        httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll());
-
-
-        return httpSecurity.build();
-    }*/
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 

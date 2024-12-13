@@ -36,6 +36,4 @@ public class ServerConfig {
     public MultipartResolver multipartResolver() {
         return new StandardServletMultipartResolver();
     }
-
-
 }

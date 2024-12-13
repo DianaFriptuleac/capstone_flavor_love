@@ -179,5 +179,4 @@ public class RicettaController {
         return ricettaService.findRicetteByCategoria(categoria, pageable);
     }
 
-
 }

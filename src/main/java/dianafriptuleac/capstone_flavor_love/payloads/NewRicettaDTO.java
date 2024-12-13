@@ -11,11 +11,11 @@ import java.util.List;
 
 public record NewRicettaDTO(
         @NotEmpty(message = "Il titolo della ricetta è obbligatorio!")
-        @Size(min = 3, max = 40, message = "Il titolo deve essere compreso tra 3 e 40 caratteri!")
+        @Size(min = 3, max = 60, message = "Il titolo deve essere compreso tra 3 e 60 caratteri!")
         String titolo,
 
         @NotEmpty(message = "Il procedimento è obbligatorio!")
-        @Size(max = 8000, message = "Il procedimento della ricetta deve contenere al massimo 8000 caratteri.")
+        @Size(max = 10000, message = "Il procedimento della ricetta deve contenere al massimo 10000 caratteri.")
         String procedimento,
 
         @NotNull(message = "La difficoltà è obbligatoria!")

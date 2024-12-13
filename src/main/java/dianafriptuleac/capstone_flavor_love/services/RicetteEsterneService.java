@@ -33,7 +33,6 @@ public class RicetteEsterneService {
 
     public Page<RicetteEsterne> fetchAndSaveAllRicette(String query, Pageable pageable) {
         String searchUrl = "https://api.spoonacular.com/recipes/complexSearch?query=" + query + "&apiKey=" + jwtToken;
-
         System.out.println("URL chiamato: " + searchUrl);
 
         // Chiamata API Spoonacular
@@ -48,28 +47,32 @@ public class RicetteEsterneService {
                 ResponseEntity<NewRicetteEsterneDTO> dettagliRisposta = restTemplate.getForEntity(dettagliUrl, NewRicetteEsterneDTO.class);
                 NewRicetteEsterneDTO dettagli = dettagliRisposta.getBody();
 
-                if (dettagli != null) {
-                    RicetteEsterne ricetta = new RicetteEsterne(
-                            dettagli.title(),
-                            dettagli.instructions() != null ? dettagli.instructions() : "Preparazione non disponibile",
-                            dettagli.image()
-                    );
-
-                    // Salvo gli ingredienti associati
-                    if (dettagli.extendedIngredients() != null) {
-                        List<IngredientiRicettaEsterna> ingredienti = dettagli.extendedIngredients().stream()
-                                .map(ing -> new IngredientiRicettaEsterna(
-                                        ing.name(),
-                                        Double.parseDouble(ing.amount()),
-                                        ing.unit(),
-                                        ricetta
-                                ))
-                                .toList();
-                        ricetta.setIngredienti(ingredienti);
-                    }
-
-                    ricetteEsterneRepository.save(ricetta);
+                if (dettagli == null || dettagli.title() == null || dettagli.image() == null) {
+                    System.err.println("Dati incompleti per la ricetta con ID: " + result.id());
+                    continue; // salta questa ricetta
                 }
+
+                RicetteEsterne ricetta = new RicetteEsterne(
+                        dettagli.title(),
+                        dettagli.instructions() != null ? dettagli.instructions() : "Preparazione non disponibile",
+                        dettagli.image()
+                );
+
+                // Salvo gli ingredienti associati
+                if (dettagli.extendedIngredients() != null) {
+                    List<IngredientiRicettaEsterna> ingredienti = dettagli.extendedIngredients().stream()
+                            .filter(ing -> ing.name() != null && ing.amount() != null && !ing.amount().isEmpty())
+                            .map(ing -> new IngredientiRicettaEsterna(
+                                    ing.name(),
+                                    Double.parseDouble(ing.amount()),
+                                    ing.unit() != null ? ing.unit() : "unità",
+                                    ricetta
+                            ))
+                            .toList();
+                    ricetta.setIngredienti(ingredienti);
+                }
+
+                ricetteEsterneRepository.save(ricetta);
             }
             return ricetteEsterneRepository.findAll(pageable);
         }
@@ -114,5 +117,4 @@ public class RicetteEsterneService {
 
         return ricetta;
     }
-
 }

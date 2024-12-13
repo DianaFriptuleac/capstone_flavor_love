@@ -77,7 +77,6 @@ public class UtenteController {
         return utenteService.uploadAvatar(currentAuthenticatedUser.getId(), file);
     }
 
-
 }
 
 

@@ -29,7 +29,6 @@ public class ImgRicettaController {
         return imgRicettaService.addImg(ricettaId, file, currentAuthenticatedUser);
     }
 
-
     @DeleteMapping("/{imgId}")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -60,5 +59,4 @@ public class ImgRicettaController {
             @RequestParam(defaultValue = "id") String sortBy) {
         return imgRicettaService.findByRicettaId(ricettaId, page, size, sortBy);
     }
-
 }

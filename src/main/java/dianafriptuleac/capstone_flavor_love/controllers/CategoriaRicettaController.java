@@ -36,7 +36,6 @@ public class CategoriaRicettaController {
 
     }
 
-
     @GetMapping
     public Page<CategoriaRicetta> findAll(@RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "8") int size,
@@ -55,6 +54,5 @@ public class CategoriaRicettaController {
     public void deleteCategoria(@PathVariable String nome) {
         categorieRicettaService.deleteCategoria(nome);
     }
-
 
 }

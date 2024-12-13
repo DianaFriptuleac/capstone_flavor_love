@@ -40,5 +40,4 @@ public class JWT {
                 .getPayload().getSubject();
     }
 
-
 }

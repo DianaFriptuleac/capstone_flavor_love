@@ -99,5 +99,4 @@ public class RicettarioController {
         ricettarioService.deleteRicettario(ricettarioId, utente);
     }
 
-
 }

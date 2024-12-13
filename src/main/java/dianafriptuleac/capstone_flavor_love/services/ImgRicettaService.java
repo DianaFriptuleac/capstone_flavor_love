@@ -86,5 +86,4 @@ public class ImgRicettaService {
         return imgRicettaRepository.findByRicettaId(ricettaId, PageRequest.of(page, size, Sort.by(sortBy)));
     }
 
-
 }

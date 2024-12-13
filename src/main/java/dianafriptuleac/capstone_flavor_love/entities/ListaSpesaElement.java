@@ -40,7 +40,6 @@ public class ListaSpesaElement {
         this.sezione = sezione;
         this.quantita = quantita;
         this.ricetta = ricetta;
-
     }
 
     @Override
