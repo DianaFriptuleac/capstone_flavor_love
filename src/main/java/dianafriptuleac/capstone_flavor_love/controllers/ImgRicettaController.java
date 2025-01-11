@@ -23,9 +23,9 @@ public class ImgRicettaController {
     @PostMapping("/{ricettaId}")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
-    public String uploadImg(@AuthenticationPrincipal Utente currentAuthenticatedUser,
-                            @PathVariable UUID ricettaId,
-                            @RequestParam("file") MultipartFile file) {
+    public ImgRicetta uploadImg(@AuthenticationPrincipal Utente currentAuthenticatedUser,
+                                @PathVariable UUID ricettaId,
+                                @RequestParam("file") MultipartFile file) {
         return imgRicettaService.addImg(ricettaId, file, currentAuthenticatedUser);
     }
 

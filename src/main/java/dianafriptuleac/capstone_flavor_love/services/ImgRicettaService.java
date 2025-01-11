@@ -34,7 +34,7 @@ public class ImgRicettaService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public String addImg(UUID ricettaId, MultipartFile file, Utente currentUser) {
+    public ImgRicetta addImg(UUID ricettaId, MultipartFile file, Utente currentUser) {
         Ricetta ricetta = ricettaRepository.findById(ricettaId)
                 .orElseThrow(() -> new IllegalArgumentException("Ricetta non trovata con ID: " + ricettaId));
 
@@ -44,28 +44,22 @@ public class ImgRicettaService {
 
         String url;
         try {
+            // Upload dell'immagine su Cloudinary
             url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         } catch (IOException e) {
             throw new BadRequestException("Errore durante l'upload dell'immagine.");
         }
 
+        // Creazione dell'oggetto ImgRicetta
         ImgRicetta imgRicetta = new ImgRicetta(ricetta, url);
-        ricetta.getImg().add(imgRicetta);
-        ricettaRepository.save(ricetta);
 
-        return url;
+        // Salvo l'img e aggioro ricetta
+        imgRicetta = imgRicettaRepository.save(imgRicetta); // Salvo img del db
+        ricetta.getImg().add(imgRicetta); // Aggiungo img alla lista della ricetta
+        ricettaRepository.save(ricetta); // Salvo ricetta aggiornata
+
+        return imgRicetta; // Ritorno l'oggetto immagine
     }
-
-    public void deleteImg(UUID imgId, UUID utenteId, boolean isAdmin) {
-        ImgRicetta imgRicetta = imgRicettaRepository.findById(imgId).orElseThrow(() ->
-                new NotFoundException("Immagine con id " + imgId + " non trovata!"));
-        Ricetta ricetta = imgRicetta.getRicetta();
-        if (!ricetta.getUtente().getId().equals(utenteId) && !isAdmin) {
-            throw new UnauthorizedException("Non hai i permessi per eliminare  l'immagiine!");
-        }
-        imgRicettaRepository.delete(imgRicetta);
-    }
-
 
     private boolean isAdmin(Utente utente) {
         return utente.getAuthorities().stream()
@@ -84,6 +78,19 @@ public class ImgRicettaService {
     //cerco img per ricetta
     public Page<ImgRicetta> findByRicettaId(UUID ricettaId, int page, int size, String sortBy) {
         return imgRicettaRepository.findByRicettaId(ricettaId, PageRequest.of(page, size, Sort.by(sortBy)));
+    }
+
+    //cancello img
+    public void deleteImg(UUID imgId, UUID utenteId, boolean isAdmin) {
+        ImgRicetta imgRicetta = imgRicettaRepository.findById(imgId).orElseThrow(() ->
+                new NotFoundException("Immagine con id " + imgId + " non trovata!"));
+
+        Ricetta ricetta = imgRicetta.getRicetta();
+        if (!ricetta.getUtente().getId().equals(utenteId) && !isAdmin) {
+            throw new UnauthorizedException("Non hai i permessi per eliminare questa immagine!");
+        }
+
+        imgRicettaRepository.delete(imgRicetta);
     }
 
 }

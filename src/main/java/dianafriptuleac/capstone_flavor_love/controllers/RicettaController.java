@@ -1,5 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.controllers;
 
+import dianafriptuleac.capstone_flavor_love.entities.ImgRicetta;
 import dianafriptuleac.capstone_flavor_love.entities.Ingrediente;
 import dianafriptuleac.capstone_flavor_love.entities.Ricetta;
 import dianafriptuleac.capstone_flavor_love.entities.Utente;
@@ -45,17 +46,14 @@ public class RicettaController {
     }
 
     @PostMapping("/{ricettaId}")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
-    public String uploadImg(
-            @AuthenticationPrincipal Utente currentAuthenticatedUser,
-            @PathVariable UUID ricettaId,
-            @RequestParam("file") MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("Il file non può essere vuoto");
-        }
+    public ImgRicetta uploadImg(@AuthenticationPrincipal Utente currentAuthenticatedUser,
+                                @PathVariable UUID ricettaId,
+                                @RequestParam("file") MultipartFile file) {
         return imgRicettaService.addImg(ricettaId, file, currentAuthenticatedUser);
     }
+
 
     // Get di tutte le ricette
     @GetMapping
