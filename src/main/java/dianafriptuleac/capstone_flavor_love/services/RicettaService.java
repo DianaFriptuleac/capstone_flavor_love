@@ -50,6 +50,10 @@ public class RicettaService {
     @Lazy
     private RicettarioService ricettarioService;
 
+    @Autowired
+    @Lazy
+    private RecensioniService recensioniService;
+
 
     // -------------------------------- Creo la ricetta ----------------------------
     public Ricetta saveRicetta(NewRicettaDTO newRicettaDTO, Utente utente) {
@@ -115,8 +119,13 @@ public class RicettaService {
         // Rimuovo la ricetta da tutti i ricettari
         ricetta.getRicettari().forEach(ricettario ->
                 ricettarioService.removeRicettaFromRicettario(ricettario.getId(), ricetta.getId(), currentAuthenticatedUser));
+
         // Rimuovo la ricetta da tutti i liked
         likedService.deleteByRicetta(ricetta);
+
+        //Rimuovo le recensioni associate alla ricetta
+        recensioniService.deleteRecensioniByRicetta(ricettaId);
+
         ricettaRepository.delete(ricetta);
     }
 

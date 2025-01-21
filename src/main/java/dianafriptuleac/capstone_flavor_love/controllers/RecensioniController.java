@@ -20,6 +20,7 @@ public class RecensioniController {
     @Autowired
     private RecensioniService recensioniService;
 
+    //salvo recensione per ricetta
     @PostMapping("/ricette/{ricettaId}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -29,4 +30,16 @@ public class RecensioniController {
             @RequestBody @Validated NewRecensioneDTO newRecensioneDTO) {
         return recensioniService.saveRecensione(ricettaId, newRecensioneDTO, currentAuthenticatedUser);
     }
+
+    //cancello recensione
+    @DeleteMapping("/{recensioneId}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRecensione(
+            @AuthenticationPrincipal Utente currentAuthenticatedUser,
+            @PathVariable UUID recensioneId) {
+        recensioniService.deleteRecensione(recensioneId, currentAuthenticatedUser, "ADMIN");
+    }
+
+
 }
