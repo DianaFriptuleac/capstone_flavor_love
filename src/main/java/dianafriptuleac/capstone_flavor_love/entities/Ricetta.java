@@ -78,6 +78,11 @@ public class Ricetta {
     @JsonIgnore
     private List<Ricettario> ricettari = new ArrayList<>();
 
+    //recensioni
+    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Recensioni> recensioni = new ArrayList<>();
+
     public Ricetta(String titolo, String procedimento, DifficoltaRicetta difficoltaRicetta,
                    int tempoPreparazioneMinuti, int tempoCotturaMinuti,
                    CostoRicetta costoRicetta, Utente utente) {
