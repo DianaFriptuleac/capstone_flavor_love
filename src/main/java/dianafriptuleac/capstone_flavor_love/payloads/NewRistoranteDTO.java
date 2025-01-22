@@ -1,7 +1,6 @@
 package dianafriptuleac.capstone_flavor_love.payloads;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record NewRistoranteDTO(
@@ -17,10 +16,8 @@ public record NewRistoranteDTO(
         @Size(min = 1, max = 200, message = "La città deve essere compresa tra 1 e 200 caratteri!")
         String citta,
 
-        @NotNull(message = "La latitudine è obbligatoria!")
         double latitudine,
 
-        @NotNull(message = "La longitudine è obbligatoria!")
         double longitudine,
 
         @NotEmpty(message = "La categoria è obbligatoria!")
