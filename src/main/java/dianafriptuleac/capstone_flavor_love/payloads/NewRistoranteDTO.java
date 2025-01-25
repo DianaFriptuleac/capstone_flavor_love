@@ -22,7 +22,7 @@ public record NewRistoranteDTO(
 
         @NotEmpty(message = "La categoria è obbligatoria!")
         @Size(min = 1, max = 100, message = "La categoria deve essere compresa tra 1 e 100 caratteri!")
-        String categoria,
+        String categorie,
 
         @NotEmpty(message = "Il numero di telefono è obbligatorio!")
         @Size(min = 3, max = 30, message = "Il numero di telefono deve essere compreso tra 3 e 30 caratteri!")

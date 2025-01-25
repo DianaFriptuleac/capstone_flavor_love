@@ -38,7 +38,7 @@ public class RistorantiService {
                 newRistoranteDTO.citta(),
                 newRistoranteDTO.latitudine(),
                 newRistoranteDTO.longitudine(),
-                newRistoranteDTO.categoria(),
+                newRistoranteDTO.categorie(),
                 newRistoranteDTO.telefono(),
                 newRistoranteDTO.link(),
                 newRistoranteDTO.immagine(),
@@ -65,7 +65,7 @@ public class RistorantiService {
         ristorante.setCitta(newRistoranteDTO.citta());
         ristorante.setLatitudine(newRistoranteDTO.latitudine());
         ristorante.setLongitudine(newRistoranteDTO.longitudine());
-        ristorante.setCategorie(newRistoranteDTO.categoria());
+        ristorante.setCategorie(newRistoranteDTO.categorie());
         ristorante.setTelefono(newRistoranteDTO.telefono());
         ristorante.setLink(newRistoranteDTO.link());
         ristorante.setImmagine(newRistoranteDTO.immagine());
