@@ -20,7 +20,6 @@ public record NewRistoranteDTO(
 
         double longitudine,
 
-
         String categorie,
 
         @NotEmpty(message = "Il numero di telefono è obbligatorio!")
