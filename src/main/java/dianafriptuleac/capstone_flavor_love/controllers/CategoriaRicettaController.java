@@ -22,7 +22,7 @@ public class CategoriaRicettaController {
     private CategorieRicettaService categorieRicettaService;
 
     @PostMapping("/createCategory")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    // @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoriaRicetta creaCategoria(@RequestBody @Validated NewCategoriaRicettaDTO body,
                                           BindingResult validatioResult) {
