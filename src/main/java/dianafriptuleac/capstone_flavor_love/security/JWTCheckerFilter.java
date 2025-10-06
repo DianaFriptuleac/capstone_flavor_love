@@ -59,7 +59,7 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
                 !path.contains("/ricetteEsterne/");
     }*/
         // Se non c'è Authorization o non è Bearer, NON lanciare eccezione:
-        // lascia che Spring Security risponda 401 quando la rotta è protetta
+        // Spring Security rispondera 401 quando la rotta è protetta
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -89,6 +89,7 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
         // Rotte pubbliche / health / error / statiche
         return path.startsWith("/auth/")
                 || path.equals("/api/ricetteEsterne/allRicette")
+                || path.equals("/api/ricette/cerca")
                 || path.equals("/")
                 || path.startsWith("/health")
                 || path.startsWith("/actuator")
