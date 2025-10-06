@@ -76,7 +76,7 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         } catch (Exception ex) {
-            // opzionale: restituisci 401 pulito
+            // restituisci 401
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"message\":\"Token non valido o mancante\"}");
