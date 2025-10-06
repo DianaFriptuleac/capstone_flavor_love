@@ -89,7 +89,6 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
         // Rotte pubbliche / health / error / statiche
         return path.startsWith("/auth/")
                 || path.equals("/api/ricetteEsterne/allRicette")
-                || path.equals("/api/ricette/cerca")
                 || path.equals("/")
                 || path.startsWith("/health")
                 || path.startsWith("/actuator")

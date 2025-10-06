@@ -2,7 +2,6 @@ package dianafriptuleac.capstone_flavor_love.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,7 +31,7 @@ public class SecurityConfig {
         httpSecurity.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.GET, "/api/ricette/cerca").permitAll().requestMatchers("/**").permitAll());
+                authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll());
         httpSecurity.cors(Customizer.withDefaults());
         return httpSecurity.build();
     }
